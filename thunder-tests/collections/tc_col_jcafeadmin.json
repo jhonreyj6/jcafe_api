@@ -1,0 +1,224 @@
+{
+    "_id": "1c3cf875-1165-43a7-81c3-3daf6a1ddb2a",
+    "colName": "jcafe_admin",
+    "created": "2023-07-03T19:14:52.784Z",
+    "sortNum": 10000,
+    "folders": [
+        {
+            "_id": "fd344218-6190-4d43-8fed-85ae637ba767",
+            "name": "Auth",
+            "containerId": "",
+            "created": "2023-07-03T19:20:22.796Z",
+            "sortNum": 20000
+        },
+        {
+            "_id": "de7729e7-8c8d-4556-b713-848cfd277572",
+            "name": "Dashboard",
+            "containerId": "",
+            "created": "2023-07-03T19:21:33.927Z",
+            "sortNum": 30000
+        },
+        {
+            "_id": "048606e0-c30a-48c1-a68d-111c2d52407f",
+            "name": "Users",
+            "containerId": "",
+            "created": "2023-07-06T16:08:20.609Z",
+            "sortNum": 40000
+        },
+        {
+            "_id": "431fa0ce-d68e-4b09-bd80-74e77b00f18f",
+            "name": "Post",
+            "containerId": "",
+            "created": "2023-07-07T10:58:14.670Z",
+            "sortNum": 50000
+        },
+        {
+            "_id": "b0479c11-969a-4bc8-9a90-a6e690043b9b",
+            "name": "Game",
+            "containerId": "",
+            "created": "2023-07-07T16:39:37.509Z",
+            "sortNum": 60000
+        }
+    ],
+    "requests": [
+        {
+            "_id": "473a926a-7abd-4018-ab45-8cf55cb1bb54",
+            "colId": "1c3cf875-1165-43a7-81c3-3daf6a1ddb2a",
+            "containerId": "fd344218-6190-4d43-8fed-85ae637ba767",
+            "name": "Login",
+            "url": "api/auth/login?email={{email}}&password={{password}}",
+            "method": "POST",
+            "sortNum": 10000,
+            "created": "2023-07-03T19:15:20.000Z",
+            "modified": "2023-07-03T19:18:42.929Z",
+            "headers": [],
+            "params": [
+                {
+                    "name": "email",
+                    "value": "{{email}}",
+                    "isPath": false
+                },
+                {
+                    "name": "password",
+                    "value": "{{password}}",
+                    "isPath": false
+                }
+            ],
+            "tests": []
+        },
+        {
+            "_id": "72696fc1-a5dc-401c-b0a4-44c6fdbf01e3",
+            "colId": "1c3cf875-1165-43a7-81c3-3daf6a1ddb2a",
+            "containerId": "de7729e7-8c8d-4556-b713-848cfd277572",
+            "name": "Index",
+            "url": "api/dashboard",
+            "method": "GET",
+            "sortNum": 10000,
+            "created": "2023-07-03T19:20:40.616Z",
+            "modified": "2023-07-03T19:20:51.393Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "dfa9cd5d-606d-4943-8084-23fbb7094a5a",
+            "colId": "1c3cf875-1165-43a7-81c3-3daf6a1ddb2a",
+            "containerId": "048606e0-c30a-48c1-a68d-111c2d52407f",
+            "name": "Delete",
+            "url": "",
+            "method": "GET",
+            "sortNum": 20000,
+            "created": "2023-07-06T16:08:27.471Z",
+            "modified": "2023-07-06T16:08:27.471Z",
+            "headers": []
+        },
+        {
+            "_id": "9ce2475c-5983-4cd9-8890-cd1af40e561c",
+            "colId": "1c3cf875-1165-43a7-81c3-3daf6a1ddb2a",
+            "containerId": "431fa0ce-d68e-4b09-bd80-74e77b00f18f",
+            "name": "Index",
+            "url": "api/posts",
+            "method": "GET",
+            "sortNum": 30000,
+            "created": "2023-07-07T10:58:21.456Z",
+            "modified": "2023-07-07T10:58:59.270Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "0b972c24-e880-4296-9618-adbf41a3ea44",
+            "colId": "1c3cf875-1165-43a7-81c3-3daf6a1ddb2a",
+            "containerId": "b0479c11-969a-4bc8-9a90-a6e690043b9b",
+            "name": "Search",
+            "url": "api/games/search",
+            "method": "GET",
+            "sortNum": 40000,
+            "created": "2023-07-07T16:39:43.308Z",
+            "modified": "2023-07-07T16:39:52.030Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "c1f4f97c-d2b9-40d7-996c-3b8a4d8fdca3",
+            "colId": "1c3cf875-1165-43a7-81c3-3daf6a1ddb2a",
+            "containerId": "b0479c11-969a-4bc8-9a90-a6e690043b9b",
+            "name": "Store",
+            "url": "api/games?name=God of War 4&genre=Slash&trailer_link=https://www.upwork.com/nx/find-work/&rating=5",
+            "method": "POST",
+            "sortNum": 50000,
+            "created": "2023-07-10T14:19:10.258Z",
+            "modified": "2023-08-16T06:35:05.024Z",
+            "headers": [],
+            "params": [
+                {
+                    "name": "name",
+                    "value": "God of War 4",
+                    "isPath": false
+                },
+                {
+                    "name": "genre",
+                    "value": "Slash",
+                    "isPath": false
+                },
+                {
+                    "name": "trailer_link",
+                    "value": "https://www.upwork.com/nx/find-work/",
+                    "isPath": false
+                },
+                {
+                    "name": "rating",
+                    "value": "5",
+                    "isPath": false
+                }
+            ],
+            "body": {
+                "type": "formdata",
+                "raw": "",
+                "form": [],
+                "files": [
+                    {
+                        "name": "image",
+                        "value": "..\\..\\..\\..\\Downloads\\download.jpg"
+                    }
+                ]
+            },
+            "tests": []
+        },
+        {
+            "_id": "aae58e94-0d09-4dc9-b4a7-7b977f9c9f10",
+            "colId": "1c3cf875-1165-43a7-81c3-3daf6a1ddb2a",
+            "containerId": "b0479c11-969a-4bc8-9a90-a6e690043b9b",
+            "name": "Update",
+            "url": "api/games/update?name=Resident Evil VI&id=98",
+            "method": "POST",
+            "sortNum": 60000,
+            "created": "2023-08-07T05:41:08.376Z",
+            "modified": "2023-08-07T05:44:47.552Z",
+            "headers": [],
+            "params": [
+                {
+                    "name": "name",
+                    "value": "Resident Evil VI",
+                    "isPath": false
+                },
+                {
+                    "name": "genre",
+                    "value": "Shooting",
+                    "isDisabled": true,
+                    "isPath": false
+                },
+                {
+                    "name": "trailer_link",
+                    "value": "https://www.upwork.com/nx/find-work/",
+                    "isDisabled": true,
+                    "isPath": false
+                },
+                {
+                    "name": "rating",
+                    "value": "4",
+                    "isDisabled": true,
+                    "isPath": false
+                },
+                {
+                    "name": "id",
+                    "value": "98",
+                    "isPath": false
+                }
+            ],
+            "tests": []
+        }
+    ],
+    "settings": {
+        "headers": [
+            {
+                "name": "Authorization",
+                "value": "Bearer {{token}}"
+            }
+        ],
+        "options": {
+            "baseUrl": "http://jcafe_admin.test/"
+        }
+    }
+}

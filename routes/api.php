@@ -31,7 +31,7 @@ Route::group(['prefix' => 'dashboard', 'middleware' => 'auth:api'], function ($r
     Route::get('/', 'App\Http\Controllers\DashboardController@index')->middleware('auth.admin');
 });
 
-Route::group(['prefix' => 'users', 'middleware'=> 'auth:api'], function ($router) {
+Route::group(['prefix' => 'users', 'middleware' => 'auth:api'], function ($router) {
     Route::get('/', 'App\Http\Controllers\UserController@index')->middleware('auth.admin');
     Route::get('/search', 'App\Http\Controllers\UserController@search');
     Route::post('/', 'App\Http\Controllers\UserController@store')->middleware('auth.admin');
@@ -62,15 +62,21 @@ Route::group(['prefix' => 'posts', 'middleware' => 'auth:api'], function ($route
     Route::post('/{post_id}/comment/{comment_id}/like', 'App\Http\Controllers\CommentLikeController@store');
 });
 
-Route::group(['prefix' => 'cart', 'middleware'=> 'auth:api'], function ($router) {
+Route::group(['prefix' => 'cart', 'middleware' => 'auth:api'], function ($router) {
     Route::get('/', 'App\Http\Controllers\CartController@index');
     Route::post('/', 'App\Http\Controllers\CartController@store');
     Route::delete('/{id}', 'App\Http\Controllers\CartController@destroy');
     Route::patch('/{id}', 'App\Http\Controllers\CartController@update');
 });
 
+Route::group(['prefix' => 'reset'], function ($router) {
+    Route::patch('/password', 'App\Http\Controllers\ResetPasswordController@update');
+    Route::post('/password/request', 'App\Http\Controllers\ResetPasswordController@store');
+    Route::get('/password/{token}', 'App\Http\Controllers\ResetPasswordController@show');
+});
 
-Route::group(['prefix' => 'games', 'middleware'=> 'auth:api'], function ($router) {
+
+Route::group(['prefix' => 'games', 'middleware' => 'auth:api'], function ($router) {
     Route::get('/', 'App\Http\Controllers\GameController@index')->withoutMiddleware('auth:api');
     Route::post('/', 'App\Http\Controllers\GameController@store')->middleware('auth.admin');
     Route::post('/update', 'App\Http\Controllers\GameController@update')->middleware('auth.admin');
@@ -86,18 +92,18 @@ Route::group(['prefix' => 'products', 'middleware' => 'auth:api'], function ($ro
 });
 
 
-Route::group(['prefix' => 'orders', 'middleware'=> 'auth:api'], function ($router) {
+Route::group(['prefix' => 'orders', 'middleware' => 'auth:api'], function ($router) {
     Route::get('/', 'App\Http\Controllers\OrderController@index');
     Route::post('/', 'App\Http\Controllers\OrderController@store');
 });
 
-Route::group(['prefix' => 'account', 'middleware'=> 'auth:api'], function ($router) {
+Route::group(['prefix' => 'account', 'middleware' => 'auth:api'], function ($router) {
     Route::get('/', 'App\Http\Controllers\AccountController@index');
     Route::post('/update', 'App\Http\Controllers\AccountController@update');
     Route::post('/update/image', 'App\Http\Controllers\AccountController@updateImage');
 });
 
-Route::group(['prefix' => 'save', 'middleware'=> 'auth:api'], function ($router) {
+Route::group(['prefix' => 'save', 'middleware' => 'auth:api'], function ($router) {
     Route::get('/', 'App\Http\Controllers\SaveController@index');
     Route::post('/', 'App\Http\Controllers\SaveController@store');
     Route::get('download/{id}', 'App\Http\Controllers\SaveController@show');

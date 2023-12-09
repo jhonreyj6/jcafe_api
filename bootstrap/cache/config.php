@@ -1,7 +1,7 @@
 <?php return array (
   'app' => 
   array (
-    'name' => 'Julian',
+    'name' => 'Jcafe',
     'env' => 'local',
     'debug' => true,
     'url' => 'http://localhost',
@@ -199,8 +199,8 @@
       'file' => 
       array (
         'driver' => 'file',
-        'path' => 'C:\\laragon\\www\\J6\\api\\storage\\framework/cache/data',
-        'lock_path' => 'C:\\laragon\\www\\J6\\api\\storage\\framework/cache/data',
+        'path' => 'C:\\laragon\\www\\jcafe_api\\storage\\framework/cache/data',
+        'lock_path' => 'C:\\laragon\\www\\jcafe_api\\storage\\framework/cache/data',
       ),
       'memcached' => 
       array (
@@ -244,7 +244,7 @@
         'driver' => 'octane',
       ),
     ),
-    'prefix' => 'julian_cache_',
+    'prefix' => 'jcafe_cache_',
   ),
   'cors' => 
   array (
@@ -343,7 +343,7 @@
       'options' => 
       array (
         'cluster' => 'redis',
-        'prefix' => 'julian_database_',
+        'prefix' => 'jcafe_database_',
       ),
       'default' => 
       array (
@@ -373,13 +373,13 @@
       'local' => 
       array (
         'driver' => 'local',
-        'root' => 'C:\\laragon\\www\\J6\\api\\storage\\app',
+        'root' => 'C:\\laragon\\www\\jcafe_api\\storage\\app',
         'throw' => false,
       ),
       'public' => 
       array (
         'driver' => 'local',
-        'root' => 'C:\\laragon\\www\\J6\\api\\storage\\app/public',
+        'root' => 'C:\\laragon\\www\\jcafe_api\\storage\\app/public',
         'url' => 'http://localhost/storage',
         'visibility' => 'public',
         'throw' => false,
@@ -399,7 +399,7 @@
     ),
     'links' => 
     array (
-      'C:\\laragon\\www\\J6\\api\\public\\storage' => 'C:\\laragon\\www\\J6\\api\\storage\\app/public',
+      'C:\\laragon\\www\\jcafe_api\\public\\storage' => 'C:\\laragon\\www\\jcafe_api\\storage\\app/public',
     ),
   ),
   'hashing' => 
@@ -474,14 +474,14 @@
       'single' => 
       array (
         'driver' => 'single',
-        'path' => 'C:\\laragon\\www\\J6\\api\\storage\\logs/laravel.log',
+        'path' => 'C:\\laragon\\www\\jcafe_api\\storage\\logs/laravel.log',
         'level' => 'debug',
         'replace_placeholders' => true,
       ),
       'daily' => 
       array (
         'driver' => 'daily',
-        'path' => 'C:\\laragon\\www\\J6\\api\\storage\\logs/laravel.log',
+        'path' => 'C:\\laragon\\www\\jcafe_api\\storage\\logs/laravel.log',
         'level' => 'debug',
         'days' => 14,
         'replace_placeholders' => true,
@@ -546,7 +546,7 @@
       ),
       'emergency' => 
       array (
-        'path' => 'C:\\laragon\\www\\J6\\api\\storage\\logs/laravel.log',
+        'path' => 'C:\\laragon\\www\\jcafe_api\\storage\\logs/laravel.log',
       ),
     ),
   ),
@@ -559,11 +559,11 @@
       array (
         'transport' => 'smtp',
         'url' => NULL,
-        'host' => 'mailpit',
-        'port' => '1025',
+        'host' => 'smtp.gmail.com',
+        'port' => '587',
         'encryption' => NULL,
-        'username' => NULL,
-        'password' => NULL,
+        'username' => 'j6cafe2018@gmail.com',
+        'password' => 'ttrxhcbmzwcucuxm',
         'timeout' => NULL,
         'local_domain' => NULL,
       ),
@@ -605,15 +605,15 @@
     ),
     'from' => 
     array (
-      'address' => 'hello@example.com',
-      'name' => 'Julian',
+      'address' => 'j6cafe2018@gmail.com',
+      'name' => 'Jcafe',
     ),
     'markdown' => 
     array (
       'theme' => 'default',
       'paths' => 
       array (
-        0 => 'C:\\laragon\\www\\J6\\api\\resources\\views/vendor/mail',
+        0 => 'C:\\laragon\\www\\jcafe_api\\resources\\views/vendor/mail',
       ),
     ),
   ),
@@ -724,7 +724,7 @@
     'lifetime' => '120',
     'expire_on_close' => false,
     'encrypt' => false,
-    'files' => 'C:\\laragon\\www\\J6\\api\\storage\\framework/sessions',
+    'files' => 'C:\\laragon\\www\\jcafe_api\\storage\\framework/sessions',
     'connection' => NULL,
     'table' => 'sessions',
     'store' => NULL,
@@ -733,7 +733,7 @@
       0 => 2,
       1 => 100,
     ),
-    'cookie' => 'julian_session',
+    'cookie' => 'jcafe_session',
     'path' => '/',
     'domain' => NULL,
     'secure' => NULL,
@@ -744,9 +744,9 @@
   array (
     'paths' => 
     array (
-      0 => 'C:\\laragon\\www\\J6\\api\\resources\\views',
+      0 => 'C:\\laragon\\www\\jcafe_api\\resources\\views',
     ),
-    'compiled' => 'C:\\laragon\\www\\J6\\api\\storage\\framework\\views',
+    'compiled' => 'C:\\laragon\\www\\jcafe_api\\storage\\framework\\views',
   ),
   'flare' => 
   array (
@@ -822,7 +822,7 @@
     array (
     ),
     'enable_runnable_solutions' => NULL,
-    'remote_sites_path' => 'C:\\laragon\\www\\J6\\api',
+    'remote_sites_path' => 'C:\\laragon\\www\\jcafe_api',
     'local_sites_path' => '',
     'housekeeping_endpoint_prefix' => '_ignition',
     'settings_file_path' => '',

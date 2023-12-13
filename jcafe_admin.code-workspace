@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "../jcafe_admin"
+		},
+		{
+			"path": "../jcafe"
+		},
+		{
+			"path": "."
+		}
+	],
+	"settings": {}
+}

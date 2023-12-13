@@ -103,6 +103,12 @@ Route::group(['prefix' => 'account', 'middleware' => 'auth:api'], function ($rou
     Route::post('/update/image', 'App\Http\Controllers\AccountController@updateImage');
 });
 
+Route::group(['prefix' => 'chat', 'middleware' => 'auth:api'], function ($router) {
+    Route::get('/', 'App\Http\Controllers\ChatController@index');
+    Route::post('/', 'App\Http\Controllers\ChatController@store');
+    Route::get('/room/show', 'App\Http\Controllers\ChatRoomController@show');
+});
+
 Route::group(['prefix' => 'save', 'middleware' => 'auth:api'], function ($router) {
     Route::get('/', 'App\Http\Controllers\SaveController@index');
     Route::post('/', 'App\Http\Controllers\SaveController@store');

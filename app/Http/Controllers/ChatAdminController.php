@@ -8,41 +8,31 @@ use App\Models\ChatRoom;
 use Auth;
 use Validator;
 use App\Events\NewChatMessage;
-use Storage;
 
-class ChatController extends Controller
+class ChatAdminController extends Controller
 {
     /**
      * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $room = ChatRoom::where('participant_id', Auth::id())->first();
-        if ($room) {
-            $chats = $room->getChat;
-            return $chats;
-        }
+        $chat = Chat::where('room_id', $request->input('room_id'))->paginate(20);
+
+        return $chat;
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'message' => 'string|max:200',
+            'message' => 'string|max:200|required',
+            'room_id' => 'numeric|nullable'
         ]);
 
         if ($validator->fails()) {
             return response()->json(['message' => $validator->messages()->get('*')], 500);
         }
 
-        $chat_room = ChatRoom::where('participant_id', Auth::id())->first();
+        $chat_room = ChatRoom::whereId($request->input('room_id'))->first();
         if (!$chat_room) {
             $chat_room = ChatRoom::create([
                 'participant_id' => Auth::id(),
@@ -55,11 +45,32 @@ class ChatController extends Controller
             'room_id' => $chat_room->id,
         ]);
 
-        $chat->getUserDetails;
-        $chat->getUserDetails()->image_url = 'test';
-
         broadcast(new NewChatMessage($chat))->toOthers();
 
         return $chat;
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(string $id)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, string $id)
+    {
+        //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(string $id)
+    {
+        //
     }
 }

@@ -19,7 +19,11 @@ class EventServiceProvider extends ServiceProvider
             SendEmailVerificationNotification::class,
             'App\Events\NewChatMessage' => [
                 'App\Listeners\NewChatMessageNotification'
-            ]
+            ],
+            'App\Events\TestEvent' => [
+                'App\Listeners\TestEventNotification'
+            ],
+
         ],
     ];
 

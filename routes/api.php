@@ -106,7 +106,15 @@ Route::group(['prefix' => 'account', 'middleware' => 'auth:api'], function ($rou
 Route::group(['prefix' => 'chat', 'middleware' => 'auth:api'], function ($router) {
     Route::get('/', 'App\Http\Controllers\ChatController@index');
     Route::post('/', 'App\Http\Controllers\ChatController@store');
-    Route::get('/room/show', 'App\Http\Controllers\ChatRoomController@show');
+    // Route::get('/room', 'App\Http\Controllers\ChatRoomController@index');
+    Route::get('/room/{id}', 'App\Http\Controllers\ChatRoomController@show');
+});
+
+Route::group(['prefix' => 'chat/admin', 'middleware' => 'auth:api'], function ($router) {
+    Route::get('/', 'App\Http\Controllers\ChatAdminController@index');
+    Route::post('/', 'App\Http\Controllers\ChatAdminController@store');
+    Route::get('/room', 'App\Http\Controllers\ChatRoomAdminController@index');
+    Route::get('/room/show', 'App\Http\Controllers\ChatRoomAdminController@show');
 });
 
 Route::group(['prefix' => 'save', 'middleware' => 'auth:api'], function ($router) {

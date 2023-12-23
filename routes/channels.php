@@ -22,3 +22,7 @@ Broadcast::channel('chat.{room_id}', function ($user, $room_id) {
         return ['id' => $user->id, 'name' => $user->first_name . ' ' . $user->last_name];
     }
 });
+
+Broadcast::channel('test', function ($user, $room_id) {
+    return true;
+});

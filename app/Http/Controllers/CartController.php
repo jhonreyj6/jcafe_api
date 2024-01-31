@@ -36,12 +36,6 @@ class CartController extends Controller
         ], 200);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \App\Http\Requests\StoreCartRequest  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -71,7 +65,6 @@ class CartController extends Controller
 
                 $cart->save();
 
-                // return data query
                 $cart_count = Cart::where('user_id', Auth::id())->get();
                 return response()->json(['quantity' => $cart_count->pluck('quantity')->sum()], 200);
         }
@@ -93,12 +86,7 @@ class CartController extends Controller
         return response()->json(['quantity' => $cart_count->pluck('quantity')->sum()], 200);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Cart  $cart
-     * @return \Illuminate\Http\Response
-     */
+
     public function show(Cart $cart)
     {
         //

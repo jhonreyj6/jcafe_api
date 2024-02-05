@@ -17,6 +17,7 @@ class Chat extends Migration
             $table->id();
             $table->integer('user_id');
             $table->string('message');
+            $table->boolean('status')->default(0);
             $table->integer('room_id');
             $table->timestamps();
         });

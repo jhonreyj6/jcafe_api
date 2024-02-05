@@ -9,6 +9,7 @@ use Auth;
 use Validator;
 use App\Events\NewChatMessage;
 use Storage;
+use DB;
 
 class ChatController extends Controller
 {
@@ -21,7 +22,14 @@ class ChatController extends Controller
     {
         $room = ChatRoom::where('participant_id', Auth::id())->first();
         if ($room) {
-            $chats = $room->getChat;
+            $chats = Chat::where('room_id', $room->id)
+                ->latest()
+                ->paginate(10)
+                ;
+            foreach ($chats as $chat) {
+                $chat->sending = false;
+            }
+
             return $chats;
         }
     }
@@ -35,7 +43,7 @@ class ChatController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'message' => 'string|max:200',
+            'message' => 'max:200|regex:/^[a-zA-Z\d\W_]+$/',
         ]);
 
         if ($validator->fails()) {
@@ -52,7 +60,7 @@ class ChatController extends Controller
         $chat = Chat::create([
             'user_id' => Auth::id(),
             'message' => $request->input('message'),
-            'room_id' => $chat_room->id,
+            'room_id' => $chat_room->id
         ]);
 
         $chat->getUserDetails;

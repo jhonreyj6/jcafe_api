@@ -19,11 +19,17 @@ class ChatRoom extends Model
 
     public function getChat()
     {
-        return $this->hasMany(Chat::class, 'room_id');
+        return $this->hasMany(Chat::class, 'room_id')->orderBy('created_at','desc');
     }
 
     public function getUserDetails() {
         return $this->belongsTo(User::class, 'participant_id', 'id');
     }
 
+    public function getUnreadChat() {
+        return $this->hasMany(Chat::class, 'room_id')->where(function($value) {
+            $value->where('status', 0)
+            ->where('user_id', '!=', Auth::id());
+        });
+    }
 }

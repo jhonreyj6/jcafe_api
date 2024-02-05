@@ -14,7 +14,8 @@ class Chat extends Model
     protected $fillable= [
       'user_id',
       'message',
-      'room_id'
+      'room_id',
+      'status',
     ];
 
     public function getUserDetails() {

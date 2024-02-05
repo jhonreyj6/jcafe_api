@@ -16,7 +16,7 @@ class ChatAdminController extends Controller
      */
     public function index(Request $request)
     {
-        $chat = Chat::where('room_id', $request->input('room_id'))->paginate(20);
+        $chat = Chat::where('room_id', $request->input('room_id'))->orderBy('created_at', 'desc')->paginate(20);
 
         return $chat;
     }
@@ -24,7 +24,7 @@ class ChatAdminController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'message' => 'string|max:200|required',
+            'message' => 'regex:/^[a-zA-Z\d\W_]+$/|max:1000|required',
             'room_id' => 'numeric|nullable'
         ]);
 

@@ -14,6 +14,7 @@ class ChatRoomAdminController extends Controller
         $room = ChatRoom::all();
         $room->map( function($value) {
             $value->getUserDetails;
+            $value->getUnreadChat;
             return $value;
         });
 

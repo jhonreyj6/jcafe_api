@@ -24,7 +24,6 @@ Route::group(['prefix' => 'auth'], function ($router) {
     Route::post('refresh', 'App\Http\Controllers\AuthController@refresh');
     Route::post('me', 'App\Http\Controllers\AuthController@me');
     Route::post('register', 'App\Http\Controllers\AuthController@register');
-    // })->middleware('cors');
 });
 
 Route::group(['prefix' => 'dashboard', 'middleware' => 'auth:api'], function ($router) {

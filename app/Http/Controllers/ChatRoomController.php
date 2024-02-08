@@ -18,7 +18,10 @@ class ChatRoomController extends Controller
 
     public function show()
     {
-        $room = ChatRoom::where('participant_id', Auth::id())->first();
+        // $room = ChatRoom::where('participant_id', Auth::id())->first();
+        $room = ChatRoom::firstOrCreate([
+            'participant_id' => Auth::id()
+        ]);
 
         return $room;
     }

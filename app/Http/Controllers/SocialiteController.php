@@ -17,7 +17,6 @@ class SocialiteController extends Controller
     public function callback($provider)
     {
         $data = Socialite::driver($provider)->user();
-        return $data;
         $user = User::where([
             "provider" => $provider,
             "provider_id" => $data->getId(),

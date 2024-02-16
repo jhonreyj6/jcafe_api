@@ -16,6 +16,7 @@ class SocialiteController extends Controller
 
     public function callback($provider)
     {
+        return response()->json(['message' => 'waka'], 200);
         $data = Socialite::driver($provider)->stateless()->user();
         $user = User::where([
             "provider" => $provider,

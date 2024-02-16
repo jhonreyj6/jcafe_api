@@ -23,6 +23,7 @@ class Kernel extends HttpKernel
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
 
         // added
+        \App\Http\Middleware\Cors::class,
         // 'role' => \App\Http\Middleware\EnsureRoleIsAdmin::class,
     ];
 
@@ -39,6 +40,9 @@ class Kernel extends HttpKernel
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+
+            // added
+
         ],
 
         'api' => [
@@ -72,6 +76,6 @@ class Kernel extends HttpKernel
 
         // added
         'auth.admin' => \App\Http\Middleware\EnsureRoleIsAdmin::class,
-        // 'cors' => \App\Http\Middleware\Cors::class,
+        'cors' => \App\Http\Middleware\Cors::class,
     ];
 }

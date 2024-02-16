@@ -37,6 +37,6 @@ class SocialiteController extends Controller
         }
 
         Auth::login($user);
-        return response()->json(['redirect' => env()], 200);
+        return response()->json(['message' => 'success'], 200);
     }
 }

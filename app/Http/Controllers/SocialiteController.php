@@ -11,12 +11,12 @@ class SocialiteController extends Controller
 {
     public function redirect($provider)
     {
-        return Socialite::driver($provider)->redirect();
+        return Socialite::driver($provider)->stateless()->redirect();
     }
 
     public function callback($provider)
     {
-        $data = Socialite::driver($provider)->user();
+        $data = Socialite::driver($provider)->stateless()->user();
         $user = User::where([
             "provider" => $provider,
             "provider_id" => $data->getId(),
@@ -32,13 +32,11 @@ class SocialiteController extends Controller
                     'provider' => $provider,
                 ]);
             } else {
-                return redirect('/login')->withErrors([
-                    'email' => 'Email has already taken!',
-                ]);
+                return response()->json(['message' => 'Email has already taken!'], 500);
             }
         }
 
         Auth::login($user);
-        return redirect('/');
+        return response()->json(['redirect' => env()], 200);
     }
 }

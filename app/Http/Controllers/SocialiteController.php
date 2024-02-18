@@ -11,14 +11,14 @@ class SocialiteController extends Controller
 {
     public function redirect($provider)
     {
-        return response()->json(['message' => 'me'], 200);
+
         // return Socialite::driver($provider)->stateless()->redirect();
-        // return response()->json(['url' => Socialite::with('facebook')->redirect()->getTargetUrl()], 200);
+        return response()->json(Socialite::with('facebook')->redirect()->getTargetUrl());
     }
 
     public function callback($provider)
     {
-        return response()->json(['message' => 'socialite'], 200);
+        // return response()->json(['message' => 'socialite'], 200);
         $data = Socialite::driver($provider)->stateless()->user();
         $user = User::where([
             "provider" => $provider,

@@ -24,6 +24,11 @@ Route::group(['prefix' => 'auth'], function ($router) {
     Route::post('refresh', 'App\Http\Controllers\AuthController@refresh');
     Route::post('me', 'App\Http\Controllers\AuthController@me');
     Route::post('register', 'App\Http\Controllers\AuthController@register');
+
+    Route::group(['prefix' => 'auth'], function ($router) {
+        Route::get('/{provider}/redirect', 'App\Http\Controllers\SocialiteController@redirect')->name('redirect.provider');
+        Route::get('/{provider}/callback', 'App\Http\Controllers\SocialiteController@callback')->name('callback.provider');
+    });
 });
 
 Route::group(['prefix' => 'dashboard', 'middleware' => 'auth:api'], function ($router) {

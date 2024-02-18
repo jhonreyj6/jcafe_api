@@ -5,11 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Callback</title>
     <script>
-        window.opener.postMessage({ token: "{{ $token }}", user: "{{ $user }}" }, "YOUR DOMAIN");
-        window.close();
+        // window.opener.postMessage({ token: "{{ $token }}", user: "{{ $user }}" }, "YOUR DOMAIN");
+        // window.close();
       </script>
 </head>
 <body>
-    Callback
+    Please Wait...
 </body>
 </html>

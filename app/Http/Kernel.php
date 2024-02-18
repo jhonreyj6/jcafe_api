@@ -23,7 +23,7 @@ class Kernel extends HttpKernel
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
 
         // added
-        \App\Http\Middleware\Cors::class,
+        // \App\Http\Middleware\OwnCors::class,
         // 'role' => \App\Http\Middleware\EnsureRoleIsAdmin::class,
     ];
 
@@ -42,7 +42,7 @@ class Kernel extends HttpKernel
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
 
             // added
-
+            // 'own.cors' => \App\Http\Middleware\OwnCors::class,
         ],
 
         'api' => [
@@ -76,6 +76,6 @@ class Kernel extends HttpKernel
 
         // added
         'auth.admin' => \App\Http\Middleware\EnsureRoleIsAdmin::class,
-        'cors' => \App\Http\Middleware\Cors::class,
+        // 'own.cors' => \App\Http\Middleware\OwnCors::class,
     ];
 }

@@ -21,6 +21,8 @@ return [
     // idk
     // 'paths' => ['api/*', 'broadcasting/auth'],
 
+    // added
+    // 'paths' => ['auth/*'],
 
     'allowed_methods' => ['*'],
 

@@ -18,10 +18,15 @@ use Illuminate\Support\Facades\Route;
 //     return response()->json(['message' => 'test'], 200);
 // })->middleware('cors');
 
-Route::group(['prefix' => 'auth', 'middleware' => 'cors'], function ($router) {
+Route::group(['prefix' => 'auth'], function ($router) {
     Route::get('/{provider}/redirect', 'App\Http\Controllers\SocialiteController@redirect')->name('redirect.provider');
     Route::get('/{provider}/callback', 'App\Http\Controllers\SocialiteController@callback')->name('callback.provider');
 });
+
+// Route::group(['prefix' => 'auth', 'middleware' => 'own.cors'], function ($router) {
+//     Route::get('/{provider}/redirect', 'App\Http\Controllers\SocialiteController@redirect')->name('redirect.provider');
+//     Route::get('/{provider}/callback', 'App\Http\Controllers\SocialiteController@callback')->name('callback.provider');
+// });
 
 
 Route::get('/', function () {

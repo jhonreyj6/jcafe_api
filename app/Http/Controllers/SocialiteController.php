@@ -13,12 +13,11 @@ class SocialiteController extends Controller
     {
 
         // return Socialite::driver($provider)->stateless()->redirect();
-        return response()->json(Socialite::with('facebook')->redirect()->getTargetUrl());
+        return response()->json(Socialite::with('facebook')->stateless()->redirect()->getTargetUrl());
     }
 
     public function callback($provider)
     {
-        // return response()->json(['message' => 'socialite'], 200);
         $data = Socialite::driver($provider)->stateless()->user();
         $user = User::where([
             "provider" => $provider,
@@ -41,6 +40,7 @@ class SocialiteController extends Controller
 
         $token = auth()->login($user);
         $user = Auth::user();
-        return view('socialite.callback', ['user'=> $user,'token'=> $token]);
+        return response()->json(['user' => $user, 'token' => $token], 200);
+        // return view('socialite.callback', ['user'=> $user,'token'=> $token]);
     }
 }

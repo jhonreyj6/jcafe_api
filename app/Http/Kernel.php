@@ -23,7 +23,7 @@ class Kernel extends HttpKernel
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
 
         // added
-        \App\Http\Middleware\OwnCors::class,
+        // \App\Http\Middleware\OwnCors::class,
         // 'role' => \App\Http\Middleware\EnsureRoleIsAdmin::class,
     ];
 

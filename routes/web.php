@@ -26,7 +26,7 @@ use Illuminate\Support\Facades\Route;
 Route::group(['prefix' => 'auth'], function ($router) {
     Route::get('/{provider}/redirect', 'App\Http\Controllers\SocialiteController@redirect')->name('redirect.provider');
     Route::get('/{provider}/callback', 'App\Http\Controllers\SocialiteController@callback')->name('callback.provider');
-});
+})->middleware('cors');
 
 
 Route::get('/', function () {

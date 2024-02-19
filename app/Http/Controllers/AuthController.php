@@ -10,7 +10,7 @@ use Hash;
 
 class AuthController extends Controller
 {
-  public function __construct()
+    public function __construct()
     {
         $this->middleware('auth:api', ['except' => ['login', 'register']]);
     }
@@ -24,7 +24,7 @@ class AuthController extends Controller
     {
         $credentials = request(['email', 'password']);
 
-        if (! $token = auth()->attempt($credentials)) {
+        if (!$token = auth()->attempt($credentials)) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 
@@ -80,7 +80,8 @@ class AuthController extends Controller
         ]);
     }
 
-    public function register(Request $request) {
+    public function register(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'first_name' => 'min:2|max:20|string|required',
             'last_name' => 'min:2|max:20|string|required',

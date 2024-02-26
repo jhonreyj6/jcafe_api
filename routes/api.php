@@ -26,8 +26,8 @@ Route::group(['prefix' => 'auth'], function ($router) {
     Route::post('register', 'App\Http\Controllers\AuthController@register');
 
 
-    Route::get('/{provider}/redirect', 'App\Http\Controllers\SocialiteController@redirect')->name('redirect.provider');
-    Route::get('/{provider}/callback', 'App\Http\Controllers\SocialiteController@callback')->name('callback.provider');
+    Route::get('/{provider}/redirect', 'App\Http\Controllers\SocialiteController@redirect');
+    Route::get('/{provider}/callback', 'App\Http\Controllers\SocialiteController@callback');
 });
 
 Route::group(['prefix' => 'dashboard', 'middleware' => 'auth:api'], function ($router) {
@@ -125,6 +125,10 @@ Route::group(['prefix' => 'save', 'middleware' => 'auth:api'], function ($router
     Route::post('/', 'App\Http\Controllers\SaveController@store');
     Route::get('download/{id}', 'App\Http\Controllers\SaveController@show');
     Route::delete('/{id}', 'App\Http\Controllers\SaveController@destroy');
+});
+
+Route::group(['prefix' => 'payment'], function ($router) {
+    Route::post('/payment/{id}', 'App\Http\Controllers\PaymentController@singleCharge')->name('single.charge');
 });
 
 // });

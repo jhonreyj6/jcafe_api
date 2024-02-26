@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('unit');
             $table->integer('price');
             $table->integer('stock');
-            $table->string('stripe_api_id');
+            $table->string('stripe_price_id');
             $table->timestamps();
         });
     }

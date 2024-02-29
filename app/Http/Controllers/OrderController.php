@@ -26,20 +26,6 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
-        // old
-        // $cart = Cart::where('user_id', Auth::user()->id)->whereIn('id', $request->input('id'))->get();
-
-        // $cart->each(function($data, $key) {
-        //     Order::create([
-        //         'user_id' => Auth::user()->id,
-        //         'quantity' => $data->quantity,
-        //         'product_variant_id' => $data->product_variant_id,
-        //     ]);
-        //     Cart::find($data->id)->delete();
-        // });
-
-        // return response()->json(['message' => 'success'], 200);
-
         $user = User::whereId(Auth::id())->firstOrFail();
 
 

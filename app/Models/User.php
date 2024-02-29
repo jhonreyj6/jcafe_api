@@ -25,6 +25,8 @@ class User extends Authenticatable implements JWTSubject
         'email',
         'password',
         'address',
+        'city',
+        'zip_code',
         'contact',
         'birthday',
         'profile_img',
@@ -75,6 +77,10 @@ class User extends Authenticatable implements JWTSubject
         } else {
             return false;
         }
+    }
+
+    public function getOrders() {
+        return $this->hasMany(Order::class);
     }
 
 }

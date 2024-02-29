@@ -16,7 +16,6 @@ class OrderTables extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->integer('user_id');
-            $table->integer('order_items_id');
             $table->boolean('status')->default(0);
             // $table->integer('quantity');
             // $table->integer('product_variant_id');

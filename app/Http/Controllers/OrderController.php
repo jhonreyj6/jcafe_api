@@ -6,6 +6,7 @@ use App\Models\Order;
 use App\Models\ProductVariant;
 use Illuminate\Http\Request;
 use App\Models\Cart;
+use App\Models\User;
 use Auth;
 use Validator;
 
@@ -39,47 +40,33 @@ class OrderController extends Controller
 
         // return response()->json(['message' => 'success'], 200);
 
+        $user = User::whereId(Auth::id())->firstOrFail();
 
 
-        $validator = Validator::make($request->all(), [
-            'id.*' => 'exists:carts,id'
-        ]);
+            $payment = $user->charge(
+                1,
+                $request->input('payment_method_id')
+            );
+            return $request->all();
+            $payment = $payment->asStripePaymentIntent();
 
-        if($validator->fails()) {
-            return response()->json(['message' => $validator->messages()->get('*')], 500);
-        }
+            $order = $user->orders()
+                ->create([
+                    'stripe_transaction_id' => $payment->charges->data[0]->id,
+                    'order_items_id' => 1,
+                    'status' => 0,
+                    'user_id' => Auth::id(),
+                ]);
+
+            // foreach (json_decode($request->input('cart'), true) as $item) {
+            //     $order->products()
+            //         ->attach($item['id'], ['quantity' => $item['quantity']]);
+            // }
+
+            // $order->load('products');
+            return $order;
 
 
-        $carts = Cart::whereIn('id', $request->input('id'))->get();
-        $variants = ProductVariant::whereIn('id', $carts->pluck('product_variant_id'))->get();
-
-        $carts->each(function($data, $key) {
-            Order::create([
-                'user_id' => Auth::user()->id,
-                'quantity' => $data->quantity,
-                'product_variant_id' => $data->product_variant_id,
-            ]);
-            Cart::find($data->id)->delete();
-        });
-
-        $data = [];
-        foreach ($variants as $variant) {
-            $data = array_merge($data, array($variant->stripe_price_id => 1));
-        }
-
-        // foreach ($carts as $cart) {
-        //     OrderItems::create([
-        //         'user_id' => Auth::id(),
-        //         'book_id' => $cart->book_id,
-        //         'order_id' => $order->id,
-        //     ]);
-        //     $cart->delete();
-        // }
-
-        // return $request->user()->checkout($data, [
-        //     'success_url' => route('payment.success'),
-        //     'cancel_url' => route('payment.cancel'),
-        // ]);
 
     }
 }

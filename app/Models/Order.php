@@ -13,9 +13,13 @@ class Order extends Model
       'user_id',
     //   'product_variant_id',
     //   'quantity',
-        'order_items_id',
         'status',
+        'stripe_transaction_id',
     ];
 
     protected $table = 'orders';
+
+    protected $casts = [
+        'order_items_id' => 'array',
+    ];
 }

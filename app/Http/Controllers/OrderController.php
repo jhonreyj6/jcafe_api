@@ -40,19 +40,15 @@ class OrderController extends Controller
 
         // return response()->json(['message' => 'success'], 200);
 
+        $user = User::whereId(Auth::id())->firstOrFail();
 
 
-        $validator = Validator::make($request->all(), [
-            'id.*' => 'exists:carts,id'
-        ]);
-
-        if($validator->fails()) {
-            return response()->json(['message' => $validator->messages()->get('*')], 500);
-        }
-
-
-        $carts = Cart::whereIn('id', $request->input('id'))->get();
-        $variants = ProductVariant::whereIn('id', $carts->pluck('product_variant_id'))->get();
+            $payment = $user->charge(
+                1,
+                $request->input('payment_method_id')
+            );
+            return $request->all();
+            $payment = $payment->asStripePaymentIntent();
 
         $carts->each(function($data, $key) {
             Order::create([

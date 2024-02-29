@@ -44,12 +44,6 @@ class OrderController extends Controller
                     'user_id' => Auth::id(),
                 ]);
 
-            // foreach (json_decode($request->input('cart'), true) as $item) {
-            //     $order->products()
-            //         ->attach($item['id'], ['quantity' => $item['quantity']]);
-            // }
-
-            // $order->load('products');
             return $order;
 
     }

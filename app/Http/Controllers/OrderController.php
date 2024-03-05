@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use App\Models\OrderItems;
 use App\Models\ProductVariant;
 use Illuminate\Http\Request;
 use App\Models\Cart;
@@ -21,30 +22,49 @@ class OrderController extends Controller
         return $orders;
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        $user = User::whereId(Auth::id())->firstOrFail();
+        $validator = Validator::make($request->all(), [
+            'orders.*' => 'exists:carts,id'
+        ]);
 
+        if ($validator->fails()) {
+            return response()->json(['message' => $validator->messages()->get('*')], 500);
+        }
 
-            $payment = $user->charge(
-                1,
-                $request->input('payment_method_id')
-            );
-            return $request->all();
-            $payment = $payment->asStripePaymentIntent();
+        $cart_items = Cart::whereIn('id', $request->input('orders'))->get();
 
-            $order = $user->orders()
-                ->create([
-                    'stripe_transaction_id' => $payment->charges->data[0]->id,
-                    'order_items_id' => 1,
-                    'status' => 0,
-                    'user_id' => Auth::id(),
-                ]);
+        $order = Order::create([
+            'user_id' => Auth::id(),
+            'status' => 0,
+        ]);
+        foreach ($cart_items as $item) {
+            OrderItems::create([
+                'order_id' => $order->id,
+                'product_variant_id' => $item->product_variant_id,
+                'quantity' => $item->quantity
+            ]);
+            // $item->delete();
+        }
 
-            return $order;
+        // $order_items = OrderItems::where('order_id', $order->id)->get();
+        // $product_variant_order_details = ProductVariant::whereIn('product_id', $order_items->pluck('product_variant_id'))->get();
 
+        // $data = [];
+        // foreach ($product_variant_order_details as $variant) {
+        //     $data = array_merge($data, array($variant->stripe_price_id => 1));
+        // }
+        // return $request->user()->checkout($data, [
+        //     'success_url' => route('payment.success'),
+        //     'cancel_url' => route('payment.cancel'),
+        // ]);
+    }
+
+    public function successPayment() {
+        return view('pages.payment_success');
+    }
+
+    public function cancelPayment() {
+        return view('pages.payment_cancel');
     }
 }

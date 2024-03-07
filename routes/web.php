@@ -19,10 +19,6 @@ use Illuminate\Support\Facades\Route;
 // })->middleware('cors');
 
 
-Route::group(['prefix' => 'stripe', 'middleware' => 'auth'], function ($router) {
-    Route::get('/payment/success', 'App\Http\Controllers\OrderController@successPayment')->name('payment.success');
-    Route::get('/payment/cancel', 'App\Http\Controllers\OrderController@cancelPayment')->name('payment.cancel');
-});
 
 
 Route::group(['prefix' => 'auth'], function ($router) {

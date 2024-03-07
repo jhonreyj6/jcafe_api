@@ -12,6 +12,8 @@ class Order extends Model
     protected $fillable = [
         'user_id',
         'status',
+        // added
+        'transaction_id',
     ];
 
     protected $table = 'orders';

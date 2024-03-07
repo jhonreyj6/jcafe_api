@@ -32,39 +32,52 @@ class OrderController extends Controller
             return response()->json(['message' => $validator->messages()->get('*')], 500);
         }
 
-        $cart_items = Cart::whereIn('id', $request->input('orders'))->get();
+        $cart_items = Cart::whereIn('id', $request->input('orders'))->where('user_id', Auth::id())->get();
 
-        $order = Order::create([
-            'user_id' => Auth::id(),
-            'status' => 0,
-        ]);
-        foreach ($cart_items as $item) {
-            OrderItems::create([
-                'order_id' => $order->id,
-                'product_variant_id' => $item->product_variant_id,
-                'quantity' => $item->quantity
+
+        if (count($cart_items)) {
+            \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+            $stripe = new \Stripe\StripeClient(env('STRIPE_SECRET'));
+            // $amount
+
+            if (!auth()->user()->stripe_id) {
+                $stripe_user = $stripe->customers->create([
+                    'name' => auth()->user()->first_name . ' ' . auth()->user()->last_name,
+                    'email' => auth()->user()->email,
+                ]);
+
+                auth()->user()->update([
+                    'stripe_id' => $stripe_user->id,
+                ]);
+            }
+
+            $intent = \Stripe\PaymentIntent::create([
+                'amount' => 1000,
+                'currency' => 'sgd',
+                'payment_method_types' => ['card'],
+                'payment_method' => $request->input('payment_method_id'),
+                'confirm' => true,
             ]);
-            // $item->delete();
+
+            if ($intent->status == 'succeeded') {
+                $order = Order::create([
+                    'user_id' => Auth::id(),
+                    'status' => 0,
+                ]);
+                foreach ($cart_items as $item) {
+                    OrderItems::create([
+                        'order_id' => $order->id,
+                        'product_variant_id' => $item->product_variant_id,
+                        'quantity' => $item->quantity
+                    ]);
+                    $item->delete();
+                }
+
+                return response()->json(['message' => 'success'], 200);
+            } else {
+                return response()->json(['message' => 'payment error'], 200);
+            }
         }
 
-        // $order_items = OrderItems::where('order_id', $order->id)->get();
-        // $product_variant_order_details = ProductVariant::whereIn('product_id', $order_items->pluck('product_variant_id'))->get();
-
-        // $data = [];
-        // foreach ($product_variant_order_details as $variant) {
-        //     $data = array_merge($data, array($variant->stripe_price_id => 1));
-        // }
-        // return $request->user()->checkout($data, [
-        //     'success_url' => route('payment.success'),
-        //     'cancel_url' => route('payment.cancel'),
-        // ]);
-    }
-
-    public function successPayment() {
-        return view('pages.payment_success');
-    }
-
-    public function cancelPayment() {
-        return view('pages.payment_cancel');
     }
 }

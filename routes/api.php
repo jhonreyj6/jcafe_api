@@ -127,13 +127,4 @@ Route::group(['prefix' => 'save', 'middleware' => 'auth:api'], function ($router
     Route::delete('/{id}', 'App\Http\Controllers\SaveController@destroy');
 });
 
-Route::group(['prefix' => 'stripe', 'middleware' => 'auth:api'], function ($router) {
-    // Route::post('/payment/initiate', 'App\Http\Controllers\StripeController@initiatePayment');
-    // Route::post('/payment/complete', 'App\Http\Controllers\StripeController@completePayment');
-    // Route::post('/payment/failure', 'App\Http\Controllers\StripeController@failPayment');
-
-    Route::get('/payment/intent', 'App\Http\Controllers\StripeController@getIntent');
-    Route::post('/payment/checkout', 'App\Http\Controllers\StripeController@singleCheckout');
-});
-
 // });

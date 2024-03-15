@@ -18,14 +18,14 @@ class OrderController extends Controller
      */
     public function index()
     {
-        $orders = Order::orderBy('created_at', 'desc')->get();
+        $orders = Order::orderBy('created_at', 'desc')->paginate(12);
         return $orders;
     }
 
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'orders.*' => 'exists:carts,id'
+            'orders.*' => 'exists:carts,id',
         ]);
 
         if ($validator->fails()) {
@@ -40,7 +40,7 @@ class OrderController extends Controller
             $stripe = new \Stripe\StripeClient(env('STRIPE_SECRET'));
             // $amount
 
-            if (!auth()->user()->stripe_id) {
+            if (auth()->user()->stripe_id == null) {
                 $stripe_user = $stripe->customers->create([
                     'name' => auth()->user()->first_name . ' ' . auth()->user()->last_name,
                     'email' => auth()->user()->email,
@@ -63,7 +63,9 @@ class OrderController extends Controller
                 $order = Order::create([
                     'user_id' => Auth::id(),
                     'status' => 0,
+                    'stripe_transaction_id' => $intent->id
                 ]);
+
                 foreach ($cart_items as $item) {
                     OrderItems::create([
                         'order_id' => $order->id,

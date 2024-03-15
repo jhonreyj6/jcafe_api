@@ -5,17 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ProductVariant extends Model
+class SubscriptionPlan extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'product_id',
-        'value',
-        'unit',
-        'price',
-        'stock',
+        'name',
+        'stripe_product_id',
         'stripe_price_id',
     ];
-    protected $table = 'product_variants';
 }

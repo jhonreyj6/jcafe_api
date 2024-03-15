@@ -17,6 +17,7 @@ class CreateGamesTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('genre');
+            $table->longText('description');
             $table->integer('rating');
             $table->string('image');
             $table->string('trailer_link');

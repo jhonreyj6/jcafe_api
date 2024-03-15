@@ -13,7 +13,7 @@ class Order extends Model
         'user_id',
         'status',
         // added
-        'transaction_id',
+        'stripe_transaction_id',
     ];
 
     protected $table = 'orders';

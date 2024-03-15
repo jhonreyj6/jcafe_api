@@ -41,6 +41,8 @@ Route::group(['prefix' => 'users', 'middleware' => 'auth:api'], function ($route
     Route::delete('/', 'App\Http\Controllers\UserController@destroy')->middleware('auth.admin');
     Route::patch('/{id}', 'App\Http\Controllers\UserController@update')->middleware('auth.admin');
 
+    Route::post('/membership', 'App\Http\Controllers\SubscriptionController@store');
+    Route::get('/membership/show', 'App\Http\Controllers\SubscriptionController@show');
 });
 
 Route::group(['prefix' => 'posts', 'middleware' => 'auth:api'], function ($router) {
@@ -68,7 +70,7 @@ Route::group(['prefix' => 'posts', 'middleware' => 'auth:api'], function ($route
 Route::group(['prefix' => 'cart', 'middleware' => 'auth:api'], function ($router) {
     Route::get('/', 'App\Http\Controllers\CartController@index');
     Route::post('/', 'App\Http\Controllers\CartController@store');
-    Route::delete('/{id}', 'App\Http\Controllers\CartController@destroy');
+    Route::delete('/', 'App\Http\Controllers\CartController@destroy');
     Route::patch('/{id}', 'App\Http\Controllers\CartController@update');
 });
 

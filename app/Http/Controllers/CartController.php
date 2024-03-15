@@ -22,11 +22,11 @@ class CartController extends Controller
     public function index()
     {
         $cart = Cart::where('user_id', Auth::user()->id)->get();
-        $cart->each(function($value) {
+        $cart->each(function ($value) {
             $value->product_details = Product::find($value->product_id);
             $value->product_variant_details = ProductVariant::find($value->product_variant_id);
             $value->image_url = Storage::disk('s3')->url('products/images/' . $value->product_details->image);
-
+            $value->getProductDetails;
             return $value;
         });
 
@@ -44,7 +44,7 @@ class CartController extends Controller
             'product_variant_id' => 'integer|required',
         ]);
 
-        if($validator->fails()) {
+        if ($validator->fails()) {
             return response()->json(['message' => $validator->messages()->get('*')], 500);
         }
 
@@ -53,23 +53,23 @@ class CartController extends Controller
         $product_details = ProductVariant::where('id', $request->input('product_variant_id'))->first();
         $quantity = $request->input('quantity');
 
-        if($cart) {
-            if($request->input('quantity') + $cart->quantity > $product_details->stock) {
+        if ($cart) {
+            if ($request->input('quantity') + $cart->quantity > $product_details->stock) {
                 $quantity = $product_details->stock;
             } else {
                 $quantity = $request->input('quantity') + $cart->quantity;
             }
-                $cart->update([
-                    'quantity' => $quantity
-                ]);
+            $cart->update([
+                'quantity' => $quantity
+            ]);
 
-                $cart->save();
+            $cart->save();
 
-                $cart_count = Cart::where('user_id', Auth::id())->get();
-                return response()->json(['quantity' => $cart_count->pluck('quantity')->sum()], 200);
+            $cart_count = Cart::where('user_id', Auth::id())->get();
+            return response()->json(['quantity' => $cart_count->pluck('quantity')->sum()], 200);
         }
 
-        if($request->input('quantity') > $product_details->stock) {
+        if ($request->input('quantity') > $product_details->stock) {
             $quantity = $product_details->stock;
         }
 
@@ -116,14 +116,14 @@ class CartController extends Controller
             'quantity' => 'integer',
         ]);
 
-        if($validator->fails()) {
+        if ($validator->fails()) {
             return response()->json(['message' => $validator->messages()->get('*')], 500);
         }
 
         $cart = Cart::whereId($id)->where('user_id', Auth::id())->firstOrFail();
 
-        if($cart) {
-            if($request->input('quantity') >= 1 && $request->input('quantity') <= $cart->getVariants->stock) {
+        if ($cart) {
+            if ($request->input('quantity') >= 1 && $request->input('quantity') <= $cart->getVariants->stock) {
                 $cart->quantity = $request->input('quantity');
                 $cart->save();
 
@@ -140,11 +140,16 @@ class CartController extends Controller
      * @param  \App\Models\Cart  $cart
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request)
     {
-        $cart = Cart::findOrFail($id);
-        if($cart->user_id == Auth::user()->id) {
-            $cart->delete();
+        $carts = Cart::whereIn('id', $request->input('orders'))->where('user_id', Auth::id())->get();
+
+        if ($carts->count()) {
+            foreach ($carts as $cart) {
+                $cart->delete();
+            }
         }
+
+        return response()->json(['message' => 'success'], 200);
     }
 }

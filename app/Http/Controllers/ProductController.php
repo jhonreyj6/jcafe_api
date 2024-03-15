@@ -25,6 +25,7 @@ class ProductController extends Controller
             $value->default_product_variant_id = $value->getVariants()->first()->id;
             $value->default_variant = $value->getVariants()->first()->value;
         }
+
         return $products;
     }
 
@@ -56,14 +57,14 @@ class ProductController extends Controller
             'rating' => $request->rating,
         ]);
 
-        for($i = 0;  $i < count($request->input('variant_value')); $i++ ) {
+        for ($i = 0; $i < count($request->input('variant_value')); $i++) {
             ProductVariant::create([
                 'product_id' => $product->id,
                 'value' => $request->input('variant_value')[$i],
                 'unit' => $request->input('variant_unit')[$i],
                 'price' => $request->input('variant_price')[$i],
                 'stock' => $request->input('variant_stock')[$i],
-                'stripe_api_id' => 4,
+                'stripe_price_id' => 4,
             ]);
         }
 
@@ -89,21 +90,39 @@ class ProductController extends Controller
      */
     public function update(Request $request)
     {
-        return $request->all();
         $validator = Validator::make($request->all(), [
-            'id' => 'exists:product,id',
-            'name' => 'string|required|min:2|max:20',
-            'description' => 'string|required|max:50',
-            'stock' => 'numeric|required',
-            'image' => 'file',
+            'id' => 'exists:products,id',
+            'name' => 'string|min:2|max:20',
+            'description' => 'string|max:500|nullable',
+            'rating' => 'numeric|required',
+            'image' => 'file|nullable',
         ]);
 
         if ($validator->fails()) {
             return response()->json(['message' => $validator->messages()->get('*')], 500);
         }
 
-        $product = Product::findOrFail($id);
-        $product->update($request->all());
+        $product = Product::findOrFail($request->input('id'));
+        $variant = ProductVariant::where('product_id', $product->id)->get();
+
+        if ($request->file('image')) {
+            Storage::disk('s3')->delete('products/images/' . $product->image);
+            Storage::disk('s3')->putFileAs('/products/images', $request->file('image'), $request->file('image')->hashName(), 'public');
+        }
+
+        $product->update([
+            'name' => $request->input('name') ? $request->input('name') : $product->name,
+            'description' => $request->input('description') ? $request->input('description') : $product->description,
+            'image' => $request->file('image') ? $request->file('image')->hashName() : $product->image
+        ]);
+
+        $product->image_url = Storage::disk('s3')->url('products/images/' . $product->image);
+        $product->getVariants;
+        $product->default_stocks = $product->getVariants()->first()->stock;
+        $product->default_price = $product->getVariants()->first()->price;
+        $product->default_product_variant_id = $product->getVariants()->first()->id;
+        $product->default_variant = $product->getVariants()->first()->value;
+
         return $product;
     }
 
@@ -112,10 +131,13 @@ class ProductController extends Controller
      */
     public function destroy(Request $request)
     {
-        $product = Product::findOrFail($request->input('id'));
-        $product->getVariants()->delete();
-        Storage::disk('s3')->delete('products/images/' . $product->image);
-        $product->delete();
+        $products = Product::whereIn('id', $request->input('id'))->get();
+        foreach ($products as $product) {
+            $product->getVariants()->delete();
+            Storage::disk('s3')->delete('products/images/' . $product->image);
+            $product->delete();
+        }
+
         return response()->json(['message' => 'deleted'], 200);
     }
 }

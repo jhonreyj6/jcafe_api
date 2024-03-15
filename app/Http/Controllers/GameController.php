@@ -39,7 +39,8 @@ class GameController extends Controller
             'genre' => 'string|required',
             'trailer_link' => 'url|required',
             'image' => 'file|mimes:png,jpg|required',
-            'rating' => 'integer|required|min:1|max:5'
+            'rating' => 'integer|required|min:1|max:5',
+            'description' => 'string|max:200|required',
         ]);
 
         if ($validator->fails()) {
@@ -50,6 +51,7 @@ class GameController extends Controller
 
         $temp = Game::create([
             'name' => $request->input('name'),
+            'description' => $request->input('description'),
             'genre' => $request->input('genre'),
             'trailer_link' => $request->input('trailer_link'),
             'image' => $request->file('image')->hashName(),
@@ -77,11 +79,12 @@ class GameController extends Controller
         $temp_game_data = Game::whereId($request->input('id'))->firstOrFail();
 
         $validator = Validator::make($request->all(), [
-            'name' => 'string|nullable|unique:games,name',
+            'name' => 'string|nullable',
             'genre' => 'string|nullable',
             'trailer_link' => 'url|nullable',
             'image' => 'mimes:png,jpg|nullable',
-            'rating' => 'integer|min:1|max:5|nullable'
+            'rating' => 'integer|min:1|max:5|nullable',
+            'description' => 'string|max:200|required',
         ]);
 
         if ($validator->fails()) {
@@ -99,6 +102,8 @@ class GameController extends Controller
             'trailer_link' => $request->input('trailer_link') ? $request->input('trailer_link') : $temp_game_data->trailer_link,
             'image' => $request->hasFile('image') ? $request->file('image')->hashName() : $temp_game_data->image,
             'rating' => $request->input('rating') ? $request->input('rating') : $temp_game_data->rating,
+            'description' => $request->input('description') ? $request->input('description') : $temp_game_data->description,
+
         ]);
 
         $game = Game::whereId($request->input('id'))->first();

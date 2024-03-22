@@ -46,12 +46,16 @@ class Post extends Model
     public function getPostAttachmentImages() {
         return $this->getPostAttachments()->where(function($query) {
             $query->where('file_link', 'LIKE', '%'.'jpg'.'%')
+            ->orWhere('file_link', 'LIKE', '%'.'mp4'.'%')
             ->orWhere('file_link', 'LIKE', '%'.'png'.'%');
         });
     }
 
     public function getPostAttachmentFiles() {
-        return $this->getPostAttachments()->whereNot('file_link', 'LIKE', '%'.'jpg'.'%')->whereNot('file_link', 'LIKE', '%'.'png'.'%');
+        return $this->getPostAttachments()
+            ->whereNot('file_link', 'LIKE', '%'.'jpg'.'%')
+            ->whereNot('file_link', 'LIKE', '%'.'mp4'.'%')
+            ->whereNot('file_link', 'LIKE', '%'.'png'.'%');
     }
 
 

@@ -40,7 +40,11 @@ class SocialiteController extends Controller
 
         $token = auth()->login($user);
         $user = Auth::user();
-        return response()->json(['user' => $user, 'token' => $token], 200);
+
+        return response()->json([
+            'user' => $user,
+            'token' => $token
+        ], 200);
         // return view('socialite.callback', ['user'=> $user,'token'=> $token]);
     }
 }

@@ -16,7 +16,7 @@ class OrderTables extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->integer('user_id');
-            $table->string('stripe_transaction_id'); // added
+            $table->string('stripe_transaction_id')->nullable(); // added
             $table->boolean('status')->default(0);
             $table->timestamps();
         });

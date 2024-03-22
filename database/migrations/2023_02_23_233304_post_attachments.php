@@ -16,8 +16,11 @@ class PostAttachments extends Migration
         Schema::create('post_attachments', function (Blueprint $table) {
             $table->id();
             $table->integer('post_id');
-            $table->string('file_link');
             $table->string('name');
+            $table->string('file_link');
+            $table->string('file_type')->nullable();
+            $table->integer('file_width')->nullable();
+            $table->integer('file_height')->nullable();
             $table->timestamps();
         });
     }

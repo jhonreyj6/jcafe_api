@@ -12,7 +12,10 @@ class PostAttachment extends Model
     protected $fillable = [
         'name',
         'post_id',
-        'file_link'
+        'file_link',
+        'file_type',
+        'file_width',
+        'file_height',
     ];
 
     protected $table = 'post_attachments';

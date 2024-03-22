@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\OrderItems;
+use App\Models\ProductVariant;
 
 class Order extends Model
 {
@@ -21,4 +23,8 @@ class Order extends Model
     protected $casts = [
         'order_items_id' => 'array',
     ];
+
+    public function getOrderItems() {
+        return $this->hasMany(OrderItems::class, 'order_id');
+    }
 }

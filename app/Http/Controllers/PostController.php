@@ -47,7 +47,7 @@ class PostController extends Controller
                 }
             }
 
-            if($post->getUserDetails) {
+            if ($post->getUserDetails) {
                 $post->getUserDetails->image_url = Storage::disk('s3')->url('users/' . $post->user_id . '/images/' . $post->getUserDetails->profile_img);
             }
         }
@@ -78,11 +78,27 @@ class PostController extends Controller
             foreach ($request->file('files') as $file) {
                 Storage::disk('s3')->putFileAs('/posts/files', $file, $file->hashName(), 'public');
 
-                PostAttachment::create([
-                    'post_id' => $post->id,
-                    'file_link' => $file->hashName(),
-                    'name' => $file->getClientOriginalName(),
-                ]);
+                $image_or_video = ['jpg', 'png', 'gif', 'bmp'];
+
+                if (in_array($file->getClientOriginalExtension(), $image_or_video)) {
+                    $data = getimagesize($file);
+
+                    PostAttachment::create([
+                        'post_id' => $post->id,
+                        'file_link' => $file->hashName(),
+                        'name' => $file->getClientOriginalName(),
+                        'file_type' => $file->getClientOriginalExtension(),
+                        'file_width' => $data[0],
+                        'file_height' => $data[1],
+                    ]);
+                } else {
+                    PostAttachment::create([
+                        'post_id' => $post->id,
+                        'file_link' => $file->hashName(),
+                        'file_type' => $file->getClientOriginalExtension(),
+                        'name' => $file->getClientOriginalName(),
+                    ]);
+                }
             }
         }
 
@@ -132,6 +148,7 @@ class PostController extends Controller
             }
             return $value;
         });
+
         return $post;
     }
 

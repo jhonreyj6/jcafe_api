@@ -31,15 +31,18 @@ Route::group(['prefix' => 'auth'], function ($router) {
 });
 
 Route::group(['prefix' => 'dashboard', 'middleware' => 'auth:api'], function ($router) {
+    // admin
     Route::get('/', 'App\Http\Controllers\DashboardController@index')->middleware('auth.admin');
 });
 
 Route::group(['prefix' => 'users', 'middleware' => 'auth:api'], function ($router) {
+    // admin
     Route::get('/', 'App\Http\Controllers\UserController@index')->middleware('auth.admin');
     Route::get('/search', 'App\Http\Controllers\UserController@search');
     Route::post('/', 'App\Http\Controllers\UserController@store')->middleware('auth.admin');
     Route::delete('/', 'App\Http\Controllers\UserController@destroy')->middleware('auth.admin');
     Route::patch('/{id}', 'App\Http\Controllers\UserController@update')->middleware('auth.admin');
+    // admin end
 
     Route::post('/membership', 'App\Http\Controllers\SubscriptionController@store');
     Route::get('/membership/show', 'App\Http\Controllers\SubscriptionController@show');
@@ -47,9 +50,11 @@ Route::group(['prefix' => 'users', 'middleware' => 'auth:api'], function ($route
 
 Route::group(['prefix' => 'posts', 'middleware' => 'auth:api'], function ($router) {
     Route::get('/', 'App\Http\Controllers\PostController@index');
+
     Route::post('/', 'App\Http\Controllers\PostController@store')->middleware('auth.admin');
     Route::patch('/', 'App\Http\Controllers\PostController@update');
     Route::delete('/', 'App\Http\Controllers\PostController@destroy')->middleware('auth.admin');
+
     Route::get('/show/{id}', 'App\Http\Controllers\PostController@show');
     // post likes
     Route::post('/{id}/like', 'App\Http\Controllers\PostLikeController@store');
@@ -83,23 +88,34 @@ Route::group(['prefix' => 'reset'], function ($router) {
 
 Route::group(['prefix' => 'games', 'middleware' => 'auth:api'], function ($router) {
     Route::get('/', 'App\Http\Controllers\GameController@index')->withoutMiddleware('auth:api');
+    Route::get('/search', 'App\Http\Controllers\GameController@search');
+
+    // admin
     Route::post('/', 'App\Http\Controllers\GameController@store')->middleware('auth.admin');
     Route::post('/update', 'App\Http\Controllers\GameController@update')->middleware('auth.admin');
-    Route::get('/search', 'App\Http\Controllers\GameController@search');
     Route::delete('/', 'App\Http\Controllers\GameController@destroy')->middleware('auth.admin');
 });
 
 Route::group(['prefix' => 'products', 'middleware' => 'auth:api'], function ($router) {
     Route::get('/', 'App\Http\Controllers\ProductController@index');
+
+    // admin
     Route::post('/', 'App\Http\Controllers\ProductController@store')->middleware('auth.admin');
     Route::post('/update', 'App\Http\Controllers\ProductController@update')->middleware('auth.admin');
     Route::delete('/', 'App\Http\Controllers\ProductController@destroy')->middleware('auth.admin');
+    Route::get('/variants/{id}', 'App\Http\Controllers\ProductVariantController@show')->middleware('auth.admin');
 });
 
 
 Route::group(['prefix' => 'orders', 'middleware' => 'auth:api'], function ($router) {
     Route::get('/', 'App\Http\Controllers\OrderController@index');
     Route::post('/', 'App\Http\Controllers\OrderController@store');
+
+    // admin
+    Route::get('/admin/search', 'App\Http\Controllers\OrderAdminController@search')->middleware('auth.admin');
+    Route::post('/admin', 'App\Http\Controllers\OrderAdminController@store')->middleware('auth.admin');
+    Route::patch('/admin', 'App\Http\Controllers\OrderAdminController@update')->middleware('auth.admin');
+    Route::delete('/admin', 'App\Http\Controllers\OrderAdminController@destroy')->middleware('auth.admin');
 });
 
 Route::group(['prefix' => 'account', 'middleware' => 'auth:api'], function ($router) {

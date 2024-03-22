@@ -22,18 +22,20 @@ class CartController extends Controller
     public function index()
     {
         $cart = Cart::where('user_id', Auth::user()->id)->get();
-        $cart->each(function ($value) {
-            $value->product_details = Product::find($value->product_id);
-            $value->product_variant_details = ProductVariant::find($value->product_variant_id);
-            $value->image_url = Storage::disk('s3')->url('products/images/' . $value->product_details->image);
-            $value->getProductDetails;
-            return $value;
-        });
+        if ($cart->isNotEmpty()) {
+            $cart->each(function ($value) {
+                $value->product_details = Product::find($value->product_id);
+                $value->product_variant_details = ProductVariant::find($value->product_variant_id);
+                $value->image_url = Storage::disk('s3')->url('products/images/' . $value->product_details->image);
+                $value->getProductDetails;
+                return $value;
+            });
 
-        return response()->json([
-            'cart_items' => $cart,
-            'cart_count' => $cart->pluck('quantity')->sum(),
-        ], 200);
+            return response()->json([
+                'cart_items' => $cart,
+                'cart_count' => $cart->pluck('quantity')->sum(),
+            ], 200);
+        }
     }
 
     public function store(Request $request)

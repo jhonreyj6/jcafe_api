@@ -19,6 +19,13 @@ class OrderController extends Controller
     public function index()
     {
         $orders = Order::orderBy('created_at', 'desc')->paginate(12);
+
+        return $orders;
+    }
+
+    public function search(Request $request) {
+        $orders = Order::where('id', "LIKE", "%" . $request->input('query') ."%")->paginate(12);
+
         return $orders;
     }
 
@@ -62,7 +69,7 @@ class OrderController extends Controller
             if ($intent->status == 'succeeded') {
                 $order = Order::create([
                     'user_id' => Auth::id(),
-                    'status' => 0,
+                    'status' => 1,
                     'stripe_transaction_id' => $intent->id
                 ]);
 

@@ -40,7 +40,7 @@ class GameController extends Controller
             'trailer_link' => 'url|required',
             'image' => 'file|mimes:png,jpg|required',
             'rating' => 'integer|required|min:1|max:5',
-            'description' => 'string|max:200|required',
+            'description' => 'string|max:500|required',
         ]);
 
         if ($validator->fails()) {

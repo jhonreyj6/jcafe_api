@@ -12,7 +12,7 @@ class ChatRoomAdminController extends Controller
      * Display a listing of the resource.
      */
     public function index() {
-        $admin = User::whereNot('role', 'admin')->get();
+        $admin = User::where('role', 'admin')->get();
         $room = ChatRoom::whereNotIn('participant_id', $admin->pluck('id'))->get();
         $room->map( function($value) {
             $value->getUserDetails;

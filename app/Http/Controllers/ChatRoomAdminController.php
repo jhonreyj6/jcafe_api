@@ -5,13 +5,15 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\ChatRoom;
 use Auth;
+use App\Models\User;
 class ChatRoomAdminController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index() {
-        $room = ChatRoom::all();
+        $admin = User::whereNot('role', 'admin')->get();
+        $room = ChatRoom::whereNotIn('participant_id', $admin->pluck('id'))->get();
         $room->map( function($value) {
             $value->getUserDetails;
             $value->getUnreadChat;

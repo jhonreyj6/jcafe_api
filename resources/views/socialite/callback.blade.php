@@ -9,7 +9,7 @@
         // window.opener.postMessage({ access_token: "{{ $access_token }}", user: "{{ $user }}" }, "https://j6cafe.com/login");
         // window.close();
     </script>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @vite(['resources/css/app.css', 'resources/js/loginPusher.js'])
 </head>
 
 <body>

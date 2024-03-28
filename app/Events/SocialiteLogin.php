@@ -10,16 +10,20 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class TestEvent
+class SocialiteLogin implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     /**
      * Create a new event instance.
      */
-    public function __construct()
+
+     public $user;
+     public $token;
+    public function __construct($user, $token)
     {
-        //
+        $this->user = $user;
+        $this->token = $token;
     }
 
     /**
@@ -30,12 +34,8 @@ class TestEvent
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel('test-channel'),
+            // new PrivateChannel('socialite'.$this->user->id),
+            new PrivateChannel('socialite'),
         ];
-    }
-
-    public function broadcastAs()
-    {
-        return "test.event";
     }
 }

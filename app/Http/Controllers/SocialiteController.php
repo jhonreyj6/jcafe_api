@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Socialite;
 use App\Models\User;
 use Auth;
+use App\Events\SocialiteLogin;
 
 class SocialiteController extends Controller
 {
@@ -41,10 +42,15 @@ class SocialiteController extends Controller
         $token = auth()->login($user);
         $user = Auth::user();
 
-        return response()->json([
-            'user' => $user,
-            'access_token' => $token
-        ], 200);
-        // return view('socialite.callback', ['user'=> $user,'token'=> $token]);
+        broadcast(new SocialiteLogin($user, $token))->toOthers();
+
+        // return response()->json([
+        //     'user' => $user,
+        //     'access_token' => $token
+        // ], 200);
+        return view('socialite.callback', [
+            'user'=> $user,
+            'access_token'=> $token
+        ]);
     }
 }

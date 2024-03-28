@@ -2,14 +2,12 @@
 
 namespace App\Listeners;
 
+use App\Events\SocialiteLogin;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 
-class TestEventNotification
+class SocialiteLoginNotification
 {
-    /**
-     * Create the event listener.
-     */
     public function __construct()
     {
         //
@@ -18,7 +16,7 @@ class TestEventNotification
     /**
      * Handle the event.
      */
-    public function handle(object $event): void
+    public function handle(SocialiteLogin $event): void
     {
         //
     }

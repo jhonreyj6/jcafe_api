@@ -12,7 +12,8 @@ class BroadcastServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Broadcast::routes(['prefix' => 'api', 'middleware' => ['auth:api']]);
+        Broadcast::routes(['prefix' => 'api']);
+        // Broadcast::routes(['prefix' => 'api', 'middleware' => ['auth:api']]);
         // Broadcast::routes();
 
         require base_path('routes/channels.php');

@@ -19,7 +19,10 @@ use Illuminate\Support\Facades\Route;
 // })->middleware('cors');
 
 
-
+Route::group(['prefix' => 'test'], function ($router) {
+    Route::get('/', 'App\Http\Controllers\TestController@index');
+    Route::post('/', 'App\Http\Controllers\TestController@store');
+});
 
 Route::group(['prefix' => 'auth'], function ($router) {
     Route::get('/{provider}/redirect', 'App\Http\Controllers\SocialiteController@redirect');

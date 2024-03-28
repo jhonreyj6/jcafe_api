@@ -23,6 +23,12 @@ Broadcast::channel('chat.{room_id}', function ($user, $room_id) {
     }
 });
 
+Broadcast::channel('socialite.{token}', function ($user, $access_token) {
+    // if (Auth::check()) {
+        return ['user' => $user, 'token' => $access_token];
+    // }
+});
+
 Broadcast::channel('test', function ($user, $room_id) {
     return true;
 });

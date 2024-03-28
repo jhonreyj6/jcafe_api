@@ -20,6 +20,9 @@ class EventServiceProvider extends ServiceProvider
             'App\Events\NewChatMessage' => [
                 'App\Listeners\NewChatMessageNotification'
             ],
+            'App\Events\SocialiteLogin' => [
+                'App\Listeners\SocialiteLoginNotification'
+            ],
             'App\Events\TestEvent' => [
                 'App\Listeners\TestEventNotification'
             ],

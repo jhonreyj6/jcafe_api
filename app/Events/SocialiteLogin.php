@@ -38,4 +38,8 @@ class SocialiteLogin implements ShouldBroadcast
             new PrivateChannel('socialite'),
         ];
     }
+
+    public function broadcastAs() {
+        return "socialite.login";
+    }
 }

@@ -12,7 +12,7 @@
     Please Wait...
 
     <script>
-        window.Echo.private("socialite." + 1).listen(".socialite.data", (e) => {
+        window.Echo.private("socialite." + 1).listen(".socialite.login", (e) => {
             console.log(e);
         });
     </script>

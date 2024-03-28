@@ -43,7 +43,7 @@ class SocialiteController extends Controller
 
         return response()->json([
             'user' => $user,
-            'token' => $token
+            'access_token' => $token
         ], 200);
         // return view('socialite.callback', ['user'=> $user,'token'=> $token]);
     }

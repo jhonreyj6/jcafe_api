@@ -7,6 +7,7 @@ use App\Models\User;
 use Auth;
 use Validator;
 use Hash;
+use Storage;
 
 class AuthController extends Controller
 {
@@ -78,6 +79,7 @@ class AuthController extends Controller
             'user' => auth::user(),
             'expires_in' => auth()->factory()->getTTL() * 60,
             'subscription' => auth()->user()->subscriptions->count() ? true : false,
+            'profile_image' => Storage::disk('s3')->url('users/' . auth()->user()->id . '/images/' . auth()->user()->profile_img),
         ]);
     }
 

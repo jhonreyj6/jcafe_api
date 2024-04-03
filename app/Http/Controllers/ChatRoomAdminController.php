@@ -6,15 +6,18 @@ use Illuminate\Http\Request;
 use App\Models\ChatRoom;
 use Auth;
 use App\Models\User;
+use DB;
+
 class ChatRoomAdminController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index() {
+    public function index()
+    {
         $admin = User::where('role', 'admin')->get();
         $room = ChatRoom::whereNotIn('participant_id', $admin->pluck('id'))->get();
-        $room->map( function($value) {
+        $room->map(function ($value) {
             $value->getUserDetails;
             $value->getUnreadChat;
             return $value;
@@ -29,6 +32,36 @@ class ChatRoomAdminController extends Controller
     public function store(Request $request)
     {
         //
+    }
+
+    public function search(Request $request)
+    {
+        // $admin = User::where('role', 'admin')->get();
+
+        // $users = User::where('role', '')->where('first_name', 'LIKE', '%' . $request->input('query') . '%')->orWhere('last_name', 'LIKE', '%' . $request->input('query') . '%')->orWhere('id', 'LIKE', '%' . $request->input('query') . '%')->get();
+
+        $users = User::where(function ($value) use ($request) {
+            $value
+                ->where('first_name', 'LIKE', '%' . $request->input('query') . '%')
+                ->orWhere('last_name', 'LIKE', '%' . $request->input('query') . '%')
+                ->orWhere(DB::raw("concat(first_name, ' ', last_name)"), 'LIKE', "%" . $request->input('query') . "%")
+                ->orWhere('id', 'LIKE', '%' . $request->input('query') . '%')
+            ;
+        })->where('role', null)->get();
+
+        $room = ChatRoom::whereIn('participant_id', $users->pluck('id'))->get();
+
+        $room->map(function ($value) {
+            $value->getUserDetails;
+            $value->getUnreadChat;
+            return $value;
+        });
+
+        return $room;
+
+
+
+
     }
 
     public function show($id)

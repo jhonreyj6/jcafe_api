@@ -25,7 +25,7 @@ class ChatController extends Controller
             $chats = Chat::where('room_id', $room->id)
                 ->latest()
                 ->paginate(10)
-                ;
+            ;
             foreach ($chats as $chat) {
                 $chat->sending = false;
             }
@@ -42,8 +42,10 @@ class ChatController extends Controller
      */
     public function store(Request $request)
     {
+
         $validator = Validator::make($request->all(), [
             'message' => 'max:200|regex:/^[a-zA-Z\d\W_]+$/',
+            // 'file.*' => 'file|max:100000'
         ]);
 
         if ($validator->fails()) {

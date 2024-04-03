@@ -23,8 +23,9 @@ class OrderController extends Controller
         return $orders;
     }
 
-    public function search(Request $request) {
-        $orders = Order::where('id', "LIKE", "%" . $request->input('query') ."%")->paginate(12);
+    public function search(Request $request)
+    {
+        $orders = Order::where('id', "LIKE", "%" . $request->input('query') . "%")->paginate(12);
 
         return $orders;
     }
@@ -58,9 +59,14 @@ class OrderController extends Controller
                 ]);
             }
 
+            $total_amount = 0;
+            foreach ($cart_items as $item) {
+                $total_amount = $total_amount + $item->getVariants->price * $item->quantity;
+            }
+
             $intent = \Stripe\PaymentIntent::create([
-                'amount' => 1000,
-                'currency' => 'sgd',
+                'amount' => $total_amount * 100,
+                'currency' => 'php',
                 'payment_method_types' => ['card'],
                 'payment_method' => $request->input('payment_method_id'),
                 'confirm' => true,
@@ -70,8 +76,17 @@ class OrderController extends Controller
                 $order = Order::create([
                     'user_id' => Auth::id(),
                     'status' => 1,
-                    'stripe_transaction_id' => $intent->id
+                    'stripe_transaction_id' => $intent->id,
+                    'total' => $total_amount,
                 ]);
+
+                // $product_variants = ProductVariant::whereIn('id', $cart_items->pluck('product_variant_id'));
+
+                // foreach ($product_variants as $variant) {
+                //     $variant->update([
+                //         'stock' => $variant->stock - ,
+                //     ]);
+                // }
 
                 foreach ($cart_items as $item) {
                     OrderItems::create([
@@ -79,6 +94,13 @@ class OrderController extends Controller
                         'product_variant_id' => $item->product_variant_id,
                         'quantity' => $item->quantity
                     ]);
+
+                    $product_variant = ProductVariant::whereId($item->product_variant_id)->firstOrFail();
+
+                    $product_variant->update([
+                        'stock' => $product_variant->stock - $item->quantity,
+                    ]);
+
                     $item->delete();
                 }
 

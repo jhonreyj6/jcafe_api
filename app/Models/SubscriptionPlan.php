@@ -13,5 +13,6 @@ class SubscriptionPlan extends Model
         'name',
         'stripe_product_id',
         'stripe_price_id',
+        'price',
     ];
 }

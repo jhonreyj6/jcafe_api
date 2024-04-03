@@ -21,6 +21,8 @@ class ChatAdminController extends Controller
         return $chat;
     }
 
+
+
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [

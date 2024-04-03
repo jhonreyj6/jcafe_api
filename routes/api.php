@@ -133,6 +133,7 @@ Route::group(['prefix' => 'chat', 'middleware' => 'auth:api'], function ($router
 
 Route::group(['prefix' => 'chat/admin', 'middleware' => 'auth:api'], function ($router) {
     Route::get('/', 'App\Http\Controllers\ChatAdminController@index');
+    Route::get('/search', 'App\Http\Controllers\ChatRoomAdminController@search');
     Route::post('/', 'App\Http\Controllers\ChatAdminController@store');
     Route::get('/room', 'App\Http\Controllers\ChatRoomAdminController@index');
     Route::get('/room/show', 'App\Http\Controllers\ChatRoomAdminController@show');

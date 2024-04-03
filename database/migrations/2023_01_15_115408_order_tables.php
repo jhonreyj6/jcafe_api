@@ -18,6 +18,7 @@ class OrderTables extends Migration
             $table->integer('user_id');
             $table->string('stripe_transaction_id')->nullable(); // added
             $table->boolean('status')->default(0);
+            $table->integer('total');
             $table->timestamps();
         });
     }

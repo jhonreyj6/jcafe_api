@@ -34,7 +34,6 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-
         $validator = Validator::make($request->all(), [
             'name' => 'string|required|min:2|max:20|unique:products,name',
             'description' => 'string|required|max:50',
@@ -44,6 +43,7 @@ class ProductController extends Controller
             'variant_unit.*' => 'string|required',
             'variant_price.*' => 'numeric|required',
             'variant_stock.*' => 'numeric|required',
+            'variant_stripe_id.*' => 'string|required',
         ]);
 
         if ($validator->fails()) {
@@ -64,7 +64,7 @@ class ProductController extends Controller
                 'unit' => $request->input('variant_unit')[$i],
                 'price' => $request->input('variant_price')[$i],
                 'stock' => $request->input('variant_stock')[$i],
-                'stripe_price_id' => 4,
+                'stripe_price_id' => $request->input('variant_stripe_id')[$i],
             ]);
         }
 

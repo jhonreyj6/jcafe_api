@@ -16,6 +16,7 @@ class Order extends Model
         'status',
         // added
         'stripe_transaction_id',
+        'total',
     ];
 
     protected $table = 'orders';
@@ -24,7 +25,8 @@ class Order extends Model
         'order_items_id' => 'array',
     ];
 
-    public function getOrderItems() {
+    public function getOrderItems()
+    {
         return $this->hasMany(OrderItems::class, 'order_id');
     }
 }

@@ -86,8 +86,8 @@ Route::group(['prefix' => 'reset'], function ($router) {
 });
 
 
-Route::group(['prefix' => 'games', 'middleware' => 'auth:api'], function ($router) {
-    Route::get('/', 'App\Http\Controllers\GameController@index')->withoutMiddleware('auth:api');
+Route::group(['prefix' => 'games'], function ($router) {
+    Route::get('/', 'App\Http\Controllers\GameController@index');
     Route::get('/search', 'App\Http\Controllers\GameController@search');
 
     // admin
@@ -97,7 +97,7 @@ Route::group(['prefix' => 'games', 'middleware' => 'auth:api'], function ($route
 });
 
 Route::group(['prefix' => 'products', 'middleware' => 'auth:api'], function ($router) {
-    Route::get('/', 'App\Http\Controllers\ProductController@index');
+    Route::get('/', 'App\Http\Controllers\ProductController@index')->withoutMiddleware('auth:api');
 
     // admin
     Route::post('/', 'App\Http\Controllers\ProductController@store')->middleware('auth.admin');

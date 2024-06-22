@@ -23,23 +23,13 @@ class ChatRoomAdminController extends Controller
             return $value;
         });
 
-        return $room;
+        return response()->json($room, 200);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+
 
     public function search(Request $request)
     {
-        // $admin = User::where('role', 'admin')->get();
-
-        // $users = User::where('role', '')->where('first_name', 'LIKE', '%' . $request->input('query') . '%')->orWhere('last_name', 'LIKE', '%' . $request->input('query') . '%')->orWhere('id', 'LIKE', '%' . $request->input('query') . '%')->get();
-
         $users = User::where(function ($value) use ($request) {
             $value
                 ->where('first_name', 'LIKE', '%' . $request->input('query') . '%')
@@ -57,10 +47,7 @@ class ChatRoomAdminController extends Controller
             return $value;
         });
 
-        return $room;
-
-
-
+        return response()->json($room, 200);
 
     }
 
@@ -68,7 +55,8 @@ class ChatRoomAdminController extends Controller
     {
         $room = ChatRoom::whereId($id)->where('participant_id', Auth::id())->first();
 
-        return $room;
+        return response()->json($room, 200);
+
     }
 
     /**

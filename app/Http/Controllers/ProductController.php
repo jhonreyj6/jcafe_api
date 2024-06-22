@@ -26,7 +26,7 @@ class ProductController extends Controller
             $value->default_variant = $value->getVariants()->first()->value;
         }
 
-        return $products;
+        return response()->json($products, 200);
     }
 
     /**
@@ -74,7 +74,7 @@ class ProductController extends Controller
         $product->image_url = Storage::disk('s3')->url('products/images/' . $product->image);
         $product->stock = $product->getVariants()->first()->stock;
         $product->price = $product->getVariants()->first()->price;
-        return $product;
+        return response()->json($product, 200);
     }
 
     /**
@@ -123,7 +123,7 @@ class ProductController extends Controller
         $product->default_product_variant_id = $product->getVariants()->first()->id;
         $product->default_variant = $product->getVariants()->first()->value;
 
-        return $product;
+        return response()->json($product, 200);
     }
 
     /**

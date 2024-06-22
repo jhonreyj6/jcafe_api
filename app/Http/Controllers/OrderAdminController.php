@@ -9,10 +9,11 @@ use App\Models\Order;
 
 class OrderAdminController extends Controller
 {
-    public function search(Request $request) {
+    public function search(Request $request)
+    {
         $orders = Order::where('user_id', $request->input('query'))->paginate(12);
 
-        return $orders;
+        return response()->json($orders, 200);
     }
 
     public function store(Request $request)

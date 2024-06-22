@@ -10,10 +10,11 @@ use Auth;
 
 class ChatRoomController extends Controller
 {
-    public function index() {
+    public function index()
+    {
         $room = ChatRoom::all();
 
-        return $room;
+        return response()->json($room, 200);
     }
 
     public function show()
@@ -23,6 +24,7 @@ class ChatRoomController extends Controller
             'participant_id' => Auth::id()
         ]);
 
-        return $room;
+        return response()->json($room, 200);
+
     }
 }

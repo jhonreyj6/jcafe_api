@@ -15,20 +15,8 @@ use Hash;
 class ResetPasswordController extends Controller
 {
 
-    public function __construct()
-    {
-        // $this->middleware('auth:api', ['except' => ['store']]);
-    }
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
 
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -39,10 +27,10 @@ class ResetPasswordController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-          'email' => 'email:rfc,dns|required|exists:users,email',
+            'email' => 'email:rfc,dns|required|exists:users,email',
         ]);
 
-        if($validator->fails()) {
+        if ($validator->fails()) {
             return response()->json(['message' => $validator->messages()->get('*')], 500);
         }
 
@@ -50,14 +38,14 @@ class ResetPasswordController extends Controller
         $reset_request = ResetPassword::where('email', $request->input('email'))->first();
 
 
-        if($reset_request) {
+        if ($reset_request) {
             $reset_request->update([
-                'access_token' => uniqid().'_'. Str::random(10),
+                'access_token' => uniqid() . '_' . Str::random(10),
             ]);
         } else {
-          $reset_request = ResetPassword::create([
+            $reset_request = ResetPassword::create([
                 'email' => $request->input('email'),
-                'access_token' => uniqid().'_'. Str::random(10),
+                'access_token' => uniqid() . '_' . Str::random(10),
             ]);
         }
 
@@ -74,9 +62,9 @@ class ResetPasswordController extends Controller
      */
     public function show($token)
     {
-      $data = ResetPassword::where('access_token', $token)->firstOrFail();
+        $data = ResetPassword::where('access_token', $token)->firstOrFail();
 
-      return $data;
+        return response()->json($data, 200);
     }
 
     /**
@@ -88,33 +76,24 @@ class ResetPasswordController extends Controller
      */
     public function update(Request $request)
     {
-      $validator = Validator::make($request->all(), [
-          'password' => 'string',
-          'confirm_password' => 'same:password',
-      ]);
+        $validator = Validator::make($request->all(), [
+            'password' => 'string',
+            'confirm_password' => 'same:password',
+        ]);
 
-      if($validator->fails()) {
-          return response()->json(['message' => $validator->messages()->get('*')], 500);
-      }
+        if ($validator->fails()) {
+            return response()->json(['message' => $validator->messages()->get('*')], 500);
+        }
 
 
-      $data = ResetPassword::where('access_token', $request->input('access_token'))->firstOrFail();
-      $user = User::where('email', $data->email)->firstOrFail();
-      $user->update([
-        'password' => Hash::make($request->input('password'))
-      ]);
+        $data = ResetPassword::where('access_token', $request->input('access_token'))->firstOrFail();
+        $user = User::where('email', $data->email)->firstOrFail();
+        $user->update([
+            'password' => Hash::make($request->input('password'))
+        ]);
 
-      return response()->json(['message' => ''], 200);
+        return response()->json(['message' => ''], 200);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
+
 }

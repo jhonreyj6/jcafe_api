@@ -20,7 +20,7 @@ class AccountController extends Controller
     {
         $user = User::whereId(Auth::id())->firstOrFail();
         $user->image_url = Storage::disk("s3")->url('users/' . $user->id . '/images/' . $user->profile_img);
-        return $user;
+        return response()->json($user, 200);
     }
 
     public function store(Request $request)
@@ -39,7 +39,7 @@ class AccountController extends Controller
             'address' => 'string|max:50',
         ]);
 
-        if($validator->fails()) {
+        if ($validator->fails()) {
             return response()->json(['message' => $validator->messages()->get('*')], 500);
         }
 
@@ -67,13 +67,14 @@ class AccountController extends Controller
         //
     }
 
-    public function updateImage(Request $request) {
+    public function updateImage(Request $request)
+    {
         $user = User::findOrFail(Auth::user()->id);
-        if($user->profile_img) {
+        if ($user->profile_img) {
             Storage::disk('s3')->delete('users/' . $user->id . '/images/' . $user->profile_img);
         }
 
-        $pathToFile = Storage::disk('s3')->putFileAs('users/' . $user->id . '/images', $request->file('image') , $request->file('image')->hashName(), 'public');
+        $pathToFile = Storage::disk('s3')->putFileAs('users/' . $user->id . '/images', $request->file('image'), $request->file('image')->hashName(), 'public');
 
         $user->update([
             'profile_img' => $request->file('image')->hashName()

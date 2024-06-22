@@ -20,14 +20,14 @@ class OrderController extends Controller
     {
         $orders = Order::orderBy('created_at', 'desc')->paginate(12);
 
-        return $orders;
+        return response()->json($orders, 200);
     }
 
     public function search(Request $request)
     {
         $orders = Order::where('id', "LIKE", "%" . $request->input('query') . "%")->paginate(12);
 
-        return $orders;
+        return response()->json($orders, 200);
     }
 
     public function store(Request $request)

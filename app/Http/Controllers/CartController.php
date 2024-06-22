@@ -88,23 +88,6 @@ class CartController extends Controller
         return response()->json(['quantity' => $cart_count->pluck('quantity')->sum()], 200);
     }
 
-
-    public function show(Cart $cart)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Cart  $cart
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Cart $cart)
-    {
-        //
-    }
-
     /**
      * Update the specified resource in storage.
      *

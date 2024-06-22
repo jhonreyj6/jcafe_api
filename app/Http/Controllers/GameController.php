@@ -19,14 +19,14 @@ class GameController extends Controller
             $game->image_url = Storage::disk('s3')->url('games/images/' . $game->image);
         }
 
-        return $games;
+        return response()->json($games, 200);
     }
 
     public function search(Request $request)
     {
         $games = Game::where('name', 'LIKE', '%' . $request->input('query') . '%')->get();
 
-        return $games;
+        return response()->json($games, 200);
     }
 
     /**
@@ -60,7 +60,7 @@ class GameController extends Controller
 
         $game = Game::whereId($temp->id)->firstOrFail();
         $game->image_url = Storage::disk('s3')->url('games/images/' . $game->image);
-        return $game;
+        return response()->json($game, 200);
     }
 
     /**
@@ -109,7 +109,7 @@ class GameController extends Controller
         $game = Game::whereId($request->input('id'))->first();
         $game->image_url = Storage::disk('s3')->url('games/images/' . $game->image);
 
-        return $game;
+        return response()->json($game, 200);
     }
 
     /**

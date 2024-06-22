@@ -9,9 +9,10 @@ use App\Models\Product;
 
 class ProductVariantController extends Controller
 {
-    public function show($id) {
+    public function show($id)
+    {
         $order = OrderItems::where('order_id', $id)->get();
 
-        return $order;
+        return response()->json($order, 200);
     }
 }

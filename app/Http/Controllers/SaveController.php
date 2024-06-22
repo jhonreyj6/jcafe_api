@@ -20,12 +20,12 @@ class SaveController extends Controller
     public function index()
     {
         $saves = DB::table('game_saves')->where('user_id', Auth::id())->orderBy('created_at', 'desc')->get();
-        $saves = $saves->transform(function($value) {
+        $saves = $saves->transform(function ($value) {
             $value->created_at = Carbon::create($value->created_at)->toDayDateTimeString();
             $value->download_link = Storage::disk('s3')->url($value->file_name);
             return $value;
         });
-        return $saves;
+        return response()->json($saves, 200);
     }
 
     /**
@@ -40,23 +40,23 @@ class SaveController extends Controller
             'file' => 'file|max:100240|mimes:zip,rar,7zip,rar4'
         ]);
 
-        if($validator->fails()) {
+        if ($validator->fails()) {
             return response()->json(['message' => $validator->messages()->get('*')], 500);
         }
 
         Storage::disk('s3')
-            ->putFileAs('users/'.Auth::user()->id . '/saves', $request->file('file') , $request->file('file')->getClientOriginalName(), 'public');
+            ->putFileAs('users/' . Auth::user()->id . '/saves', $request->file('file'), $request->file('file')->getClientOriginalName(), 'public');
 
         $save = GameSave::create([
             'user_id' => Auth::id(),
             'file_name' => $request->file('file')->getClientOriginalName(),
-            'file_size' => $request->file('file')->getSize() / 1000 ,
+            'file_size' => $request->file('file')->getSize() / 1000,
         ]);
 
         $save->created_at = Carbon::create($save->created_at)->toDayDateTimeString();
         $save->download_link = Storage::disk('s3')->url($save->file_name);
 
-        return $save;
+        return response()->json($save, 200);
     }
 
     /**
@@ -72,20 +72,10 @@ class SaveController extends Controller
             'id' => $id,
         ])->firstOrFail();
 
-        return Storage::disk('s3')->download('users/'.Auth::id().'/saves/'. $save->file_name);
+        return Storage::disk('s3')->download('users/' . Auth::id() . '/saves/' . $save->file_name);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
+
 
     /**
      * Remove the specified resource from storage.
@@ -100,7 +90,7 @@ class SaveController extends Controller
             'id' => $id,
         ])->firstOrFail();
 
-        Storage::disk('s3')->delete('users/'. Auth::id() .'/saves/'. $save->file_name);
+        Storage::disk('s3')->delete('users/' . Auth::id() . '/saves/' . $save->file_name);
 
         $save->delete();
         return response()->json(['message' => 'deleted'], 200);

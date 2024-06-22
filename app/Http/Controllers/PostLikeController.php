@@ -8,25 +8,15 @@ use Auth;
 
 class PostLikeController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store($id)
     {
-        $like = PostLike::where(function($query) use ($id) {
+        $like = PostLike::where(function ($query) use ($id) {
             $query->where('post_id', $id)
-            ->where('user_id', Auth::id());
+                ->where('user_id', Auth::id());
         })->first();
 
-        if($like) {
+        if ($like) {
             return $this->destroy($id);
 
         } else {
@@ -41,30 +31,15 @@ class PostLikeController extends Controller
 
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
 
     /**
      * Remove the specified resource from storage.
      */
     public function destroy($id)
     {
-        $like = PostLike::where(function($query) use ($id) {
+        $like = PostLike::where(function ($query) use ($id) {
             $query->where('post_id', $id)
-            ->where('user_id', Auth::id());
+                ->where('user_id', Auth::id());
         })->first();
 
         $like->delete();

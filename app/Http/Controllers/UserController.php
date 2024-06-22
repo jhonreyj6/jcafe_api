@@ -16,7 +16,7 @@ class UserController extends Controller
     {
         $user = User::orderBy('created_at', 'desc')->paginate(10);
 
-        return $user;
+        return response()->json($user, 200);
     }
 
     public function search(Request $request)
@@ -28,7 +28,7 @@ class UserController extends Controller
             ->orWhere('email', 'LIKE', '%' . $request->input('query') . '%')
             ->paginate(10);
 
-        return $user;
+        return response()->json($user, 200);
     }
 
     /**
@@ -59,15 +59,7 @@ class UserController extends Controller
             'role' => $request->input('role')
         ]);
 
-        return $user;
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(User $user)
-    {
-        //
+        return response()->json($user, 200);
     }
 
     /**
@@ -103,7 +95,7 @@ class UserController extends Controller
             'birthday' => $request->input('birthday')
         ]);
 
-        return $user;
+        return response()->json($user, 200);
     }
 
     /**

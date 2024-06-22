@@ -18,7 +18,7 @@ class ChatAdminController extends Controller
     {
         $chat = Chat::where('room_id', $request->input('room_id'))->orderBy('created_at', 'desc')->paginate(20);
 
-        return $chat;
+        return response()->json($chat, 200);
     }
 
 
@@ -49,6 +49,6 @@ class ChatAdminController extends Controller
 
         broadcast(new NewChatMessage($chat))->toOthers();
 
-        return $chat;
+        return response()->json($chat, 200);
     }
 }

@@ -16,18 +16,18 @@ class CommentController extends Controller
      */
     public function index(Request $request, $id)
     {
-        if($request->input('sort') == 'oldest') {
+        if ($request->input('sort') == 'oldest') {
             $comments = Comment::where('post_id', $id)->orderBy('created_at', 'asc')->paginate(3);
         } else {
             $comments = Comment::where('post_id', $id)->orderBy('created_at', 'desc')->paginate(3);
         }
 
-        foreach($comments as $comment) {
+        foreach ($comments as $comment) {
             $comment->getLikes;
             $comment->user_details = User::where('id', $comment->user_id)->first();
             // $comment->user_details['image_url'] =  Storage::disk('s3')->url('users/'. $comment->user_details['id'] . '/images/' . $comment->user_details['profile_img']);
-            if($comment->user_details['profile_img']) {
-                $comment->user_details['image_url'] =  Storage::disk('s3')->url('users/'. $comment->user_details['id'] . '/images/' . $comment->user_details['profile_img']);
+            if ($comment->user_details['profile_img']) {
+                $comment->user_details['image_url'] = Storage::disk('s3')->url('users/' . $comment->user_details['id'] . '/images/' . $comment->user_details['profile_img']);
             } else {
                 $comment->user_details['image_url'] = null;
             }
@@ -39,7 +39,7 @@ class CommentController extends Controller
             }
         }
 
-        return $comments;
+        return response()->json($comments, 200);
     }
 
     /**
@@ -52,7 +52,7 @@ class CommentController extends Controller
             'message' => 'string|required|max:200',
         ]);
 
-        if($validator->fails()) {
+        if ($validator->fails()) {
             return response()->json(['message' => $validator->messages()->get('*')], 500);
         }
 
@@ -70,13 +70,13 @@ class CommentController extends Controller
 
         $comment->user_details = Auth::user();
         // $comment->user_details['image_url'] = Storage::disk('s3')->url('users/'. $comment->user_details['id'] . '/images/' . $comment->user_details['profile_img']);
-        if($comment->user_details['profile_img']) {
-            $comment->user_details['image_url'] =  Storage::disk('s3')->url('users/'. $comment->user_details['id'] . '/images/' . $comment->user_details['profile_img']);
+        if ($comment->user_details['profile_img']) {
+            $comment->user_details['image_url'] = Storage::disk('s3')->url('users/' . $comment->user_details['id'] . '/images/' . $comment->user_details['profile_img']);
         } else {
             $comment->user_details['image_url'] = null;
         }
 
-        return $comment;
+        return response()->json($comment, 200);
     }
 
     /**
@@ -97,7 +97,7 @@ class CommentController extends Controller
             'message' => 'string|required'
         ]);
 
-        if($validator->fails()) {
+        if ($validator->fails()) {
             return response()->json(['message' => $validator->messages()->get('*')], 500);
         }
 
@@ -109,7 +109,7 @@ class CommentController extends Controller
             $comment->authLikes = 0;
         }
 
-        return $comment;
+        return response()->json($comment, 200);
     }
 
     /**
@@ -118,7 +118,7 @@ class CommentController extends Controller
     public function destroy(Request $request, $post_id)
     {
         $comment = Comment::whereId($request->input('comment_id'))->where('user_id', Auth::id())->firstOrFail();
-        foreach($comment->getLikes as $like) {
+        foreach ($comment->getLikes as $like) {
             $like->delete();
         }
         $comment->delete();

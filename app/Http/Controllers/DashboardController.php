@@ -17,75 +17,46 @@ class DashboardController extends Controller
 
 
         $users = User::WhereMonth('created_at', now()->subMonth(2))
-        ->whereYear('created_at', now()->year)
-        ->orWhereMonth('created_at', now()->subMonths(1))
-        ->whereYear('created_at', now()->year)
-        ->orWhereMonth('created_at', now()->subMonth(0))
-        ->whereYear('created_at', now()->year)
-        ->orderBy('created_at', 'desc')
-        ->get();
+            ->whereYear('created_at', now()->year)
+            ->orWhereMonth('created_at', now()->subMonths(1))
+            ->whereYear('created_at', now()->year)
+            ->orWhereMonth('created_at', now()->subMonth(0))
+            ->whereYear('created_at', now()->year)
+            ->orderBy('created_at', 'desc')
+            ->get();
 
-        $users->map(function($value) {
-          $value->month = $value->created_at->format('M');
-          return $value;
+        $users->map(function ($value) {
+            $value->month = $value->created_at->format('M');
+            return $value;
         });
 
-        foreach($users as $user) {
-          if($user->month == now()->format('M')) {
-            $current_month += 1;
-            // return '1st';
-          }
+        foreach ($users as $user) {
+            if ($user->month == now()->format('M')) {
+                $current_month += 1;
+                // return '1st';
+            }
 
-          if($user->month == now()->subMonth(1)->format('M')) {
-            $prev_month += 1;
-          }
+            if ($user->month == now()->subMonth(1)->format('M')) {
+                $prev_month += 1;
+            }
 
-          if($user->month == now()->subMonth(2)->format('M')) {
-            $prev_2month += 1;
-          }
+            if ($user->month == now()->subMonth(2)->format('M')) {
+                $prev_2month += 1;
+            }
         }
 
-        foreach($users->pluck('month')->unique() as $key => $month) {
-          array_push($array_months, array($key => $month ));
+        foreach ($users->pluck('month')->unique() as $key => $month) {
+            array_push($array_months, array($key => $month));
         }
 
         return response()->json(
-          [
-            'months' => $array_months,
-            'users_count' => array($current_month, $prev_month, $prev_2month),
-          ]
-        , 200);
+            [
+                'months' => $array_months,
+                'users_count' => array($current_month, $prev_month, $prev_2month),
+            ]
+            ,
+            200
+        );
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(User $user)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, User $user)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(User $user)
-    {
-        //
-    }
 }

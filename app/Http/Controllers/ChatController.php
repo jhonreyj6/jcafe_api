@@ -30,7 +30,7 @@ class ChatController extends Controller
                 $chat->sending = false;
             }
 
-            return $chats;
+            return response()->json($chats, 200);
         }
     }
 
@@ -70,6 +70,6 @@ class ChatController extends Controller
 
         broadcast(new NewChatMessage($chat))->toOthers();
 
-        return $chat;
+        return response()->json($chat, 200);
     }
 }

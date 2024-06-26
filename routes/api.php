@@ -46,6 +46,9 @@ Route::group(['prefix' => 'users', 'middleware' => 'auth:api'], function ($route
 
     Route::post('/membership', 'App\Http\Controllers\SubscriptionController@store');
     Route::get('/membership/show', 'App\Http\Controllers\SubscriptionController@show');
+    Route::post('/membership/cancel', 'App\Http\Controllers\SubscriptionController@cancel');
+    Route::post('/membership/resume', 'App\Http\Controllers\SubscriptionController@resume');
+
 });
 
 Route::group(['prefix' => 'posts', 'middleware' => 'auth:api'], function ($router) {

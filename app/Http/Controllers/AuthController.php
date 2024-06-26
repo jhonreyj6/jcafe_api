@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\SubscriptionPlan;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Auth;
@@ -73,12 +74,22 @@ class AuthController extends Controller
      */
     protected function respondWithToken($token)
     {
+        // err
+
+        $plans = SubscriptionPlan::all();
+        $isSubscribed = false;
+        foreach ($plans as $plan) {
+            if (auth()->user()->subscribed($plan)) {
+                $isSubscribed = true;
+            }
+        }
+
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
             'user' => auth::user(),
             'expires_in' => auth()->factory()->getTTL() * 60,
-            'subscription' => auth()->user()->subscriptions->count() ? true : false,
+            'subscription' => $isSubscribed,
             'profile_image' => Storage::disk('s3')->url('users/' . auth()->user()->id . '/images/' . auth()->user()->profile_img),
         ]);
     }

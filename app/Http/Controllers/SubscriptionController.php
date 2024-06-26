@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Subscription;
 use App\Models\SubscriptionPlan;
 use Illuminate\Http\Request;
 use Validator;
+use Carbon;
 
 class SubscriptionController extends Controller
 {
@@ -18,7 +20,6 @@ class SubscriptionController extends Controller
             return response()->json(['message' => $validator->messages()->get('*')], 500);
         }
 
-        $plan = SubscriptionPlan::where('name', $request->input('subscription_plan'))->firstOrFail();
 
         // stripe method
         // $stripe = new \Stripe\StripeClient(env('STRIPE_SECRET'));
@@ -46,19 +47,72 @@ class SubscriptionController extends Controller
         //     'items' => [['price' => $plan->stripe_price_id]],
         // ]);
 
-        if(auth()->user()->subscriptions->count()) {
+        $plans = SubscriptionPlan::all();
+        $isSubscribed = false;
+        foreach ($plans as $plan) {
+            if (auth()->user()->subscribed($plan)) {
+                $isSubscribed = true;
+            }
+        }
+
+        if ($isSubscribed) {
             return response()->json(['message' => 'Already Subscribe to a plan.'], 200);
         }
 
-        $request->user()->newSubscription($plan, $plan->stripe_price_id)->create($request->input('payment_method_id'));
+        auth()->user()
+            ->newSubscription($plan, $plan->stripe_price_id)
+            ->trialDays(1)
+            ->create($request->input('payment_method_id'));
 
         return response()->json(['message' => 'success'], 200);
     }
 
-    public function show(Request $request) {
-        if(auth()->user()->subscriptions->count()) {
-            return response()->json(['subscription' => auth()->user()->subscriptions], 200);
+    public function show(Request $request)
+    {
+        $subscription = null;
+
+        $plans = SubscriptionPlan::all();
+        foreach ($plans as $plan) {
+            if (auth()->user()->subscribed($plan)) {
+                $subscription = auth()->user()->subscription($plan);
+            }
         }
+
+        if ($subscription) {
+            $this->modifiedData($subscription);
+            return response()->json($subscription, 200);
+        }
+    }
+
+    public function cancel(Request $request)
+    {
+        $subscription = auth()->user()->subscriptions->where('id', $request->input('id'))->firstOrFail();
+        $request->user()->subscription($subscription->type)->cancel();
+
+        $this->modifiedData($subscription);
+        return response()->json($subscription, 200);
+    }
+
+    public function resume(Request $request)
+    {
+        $subscription = $request->input('subscription');
+        $request->user()->subscription(json_encode($subscription['type']))->resume();
+        $new_subscription = $request->user()->subscription(json_encode($subscription['type']));
+        $new_subscription = $this->modifiedData($new_subscription);
+
+        return response()->json($new_subscription, 200);
+    }
+
+    public function modifiedData($subscription)
+    {
+        $subscription->creation_time = Carbon::create($subscription->created_at)->toDayDateTimeString();
+        if ($subscription->trial_ends_at) {
+            $subscription->trial_ends = Carbon::create($subscription->trial_ends_at)->toDayDateTimeString();
+        }
+        if ($subscription->ends_at) {
+            $subscription->end_time = Carbon::create($subscription->ends_at)->toDayDateTimeString();
+        }
+        return $subscription;
     }
 
 }

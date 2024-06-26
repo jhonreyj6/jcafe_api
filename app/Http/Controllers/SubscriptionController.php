@@ -13,13 +13,14 @@ class SubscriptionController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'subscription_plan' => 'in:visitor,regular,loyal'
+            'subscription_plan' => 'in:Visitor,Regular,Loyal'
         ]);
 
         if ($validator->fails()) {
             return response()->json(['message' => $validator->messages()->get('*')], 500);
         }
 
+        $plan = SubscriptionPlan::where('name', $request->input('subscription_plan'))->firstOrFail();
 
         // stripe method
         // $stripe = new \Stripe\StripeClient(env('STRIPE_SECRET'));
@@ -49,8 +50,8 @@ class SubscriptionController extends Controller
 
         $plans = SubscriptionPlan::all();
         $isSubscribed = false;
-        foreach ($plans as $plan) {
-            if (auth()->user()->subscribed($plan)) {
+        foreach ($plans as $data) {
+            if (auth()->user()->subscribed($data)) {
                 $isSubscribed = true;
             }
         }

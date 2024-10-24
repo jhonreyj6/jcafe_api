@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Game;
 use Illuminate\Http\Request;
-use Validator;
 use Storage;
+use Validator;
 
 class GameController extends Controller
 {
@@ -15,9 +15,6 @@ class GameController extends Controller
     public function index()
     {
         $games = Game::orderBy('created_at', 'desc')->paginate(10);
-        foreach ($games as $game) {
-            $game->image_url = Storage::disk('s3')->url('games/images/' . $game->image);
-        }
 
         return response()->json($games, 200);
     }
@@ -47,7 +44,7 @@ class GameController extends Controller
             return response()->json(['message' => $validator->messages()->get('*')], 500);
         }
 
-        Storage::disk('s3')->putFileAs('/games/images', $request->file('image'), $request->file('image')->hashName(), 'public');
+        Storage::disk('local')->putFileAs('/public/games/images', $request->file('image'), $request->file('image')->hashName(), 'public');
 
         $temp = Game::create([
             'name' => $request->input('name'),
@@ -55,11 +52,12 @@ class GameController extends Controller
             'genre' => $request->input('genre'),
             'trailer_link' => $request->input('trailer_link'),
             'image' => $request->file('image')->hashName(),
-            'rating' => 4
+            'rating' => 4,
         ]);
 
         $game = Game::whereId($temp->id)->firstOrFail();
-        $game->image_url = Storage::disk('s3')->url('games/images/' . $game->image);
+        $game->image_url = Storage::disk('local')->url('/public/games/images/' . $game->image);
+
         return response()->json($game, 200);
     }
 
@@ -92,8 +90,8 @@ class GameController extends Controller
         }
 
         if ($request->hasFile('image')) {
-            Storage::disk('s3')->delete('/games/images/' . $temp_game_data->image);
-            Storage::disk('s3')->putFileAs('/games/images', $request->file('image'), $request->file('image')->hashName(), 'public');
+            Storage::disk('local')->delete('/public/games/images/' . $temp_game_data->image);
+            Storage::disk('local')->putFileAs('/public/games/images', $request->file('image'), $request->file('image')->hashName(), 'public');
         }
 
         Game::whereId($request->input('id'))->update([
@@ -107,7 +105,6 @@ class GameController extends Controller
         ]);
 
         $game = Game::whereId($request->input('id'))->first();
-        $game->image_url = Storage::disk('s3')->url('games/images/' . $game->image);
 
         return response()->json($game, 200);
     }
@@ -120,7 +117,7 @@ class GameController extends Controller
         $games = Game::whereIn('id', $request->input('id'))->get();
 
         foreach ($games as $game) {
-            Storage::disk('s3')->delete('games/images/' . $game->image);
+            Storage::disk('local')->delete('/public/games/images/' . $game->image);
             $game->delete();
         }
 

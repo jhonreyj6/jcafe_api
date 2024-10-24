@@ -3,11 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use Illuminate\Http\Request;
-use Validator;
 use Auth;
+use Illuminate\Http\Request;
 use Storage;
-use App\Http\Controllers\AuthController;
+use Validator;
 
 class AccountController extends Controller
 {
@@ -19,7 +18,7 @@ class AccountController extends Controller
     public function index()
     {
         $user = User::whereId(Auth::id())->firstOrFail();
-        $user->image_url = Storage::disk("s3")->url('users/' . $user->id . '/images/' . $user->profile_img);
+        $user->image_url = Storage::disk("local")->url('/public/users/' . $user->id . '/images/' . $user->profile_img);
         return response()->json($user, 200);
     }
 
@@ -27,7 +26,6 @@ class AccountController extends Controller
     {
         //
     }
-
 
     public function update(Request $request)
     {
@@ -50,7 +48,7 @@ class AccountController extends Controller
             'last_name' => $request->input('last_name'),
             'birthday' => $request->input('birthday'),
             'contact' => $request->input('contact'),
-            'address' => $request->input('address')
+            'address' => $request->input('address'),
         ]);
 
         return response()->json(['message' => 'updated'], 200);
@@ -71,17 +69,15 @@ class AccountController extends Controller
     {
         $user = User::findOrFail(Auth::user()->id);
         if ($user->profile_img) {
-            Storage::disk('s3')->delete('users/' . $user->id . '/images/' . $user->profile_img);
+            Storage::disk('local')->delete('/public/users/' . $user->id . '/images/' . $user->profile_img);
         }
 
-        $pathToFile = Storage::disk('s3')->putFileAs('users/' . $user->id . '/images', $request->file('image'), $request->file('image')->hashName(), 'public');
+        Storage::disk('local')->putFileAs('/public/users/' . $user->id . '/images', $request->file('image'), $request->file('image')->hashName(), 'public');
 
         $user->update([
-            'profile_img' => $request->file('image')->hashName()
+            'profile_img' => $request->file('image')->hashName(),
         ]);
 
         return response()->json(['Profile' => 'Image Updated'], 200);
     }
 }
-
-

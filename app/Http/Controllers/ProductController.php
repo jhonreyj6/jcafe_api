@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Product;
 use App\Models\ProductVariant;
 use Illuminate\Http\Request;
-use App\Models\Product;
-use Validator;
 use Storage;
+use Validator;
 
 class ProductController extends Controller
 {
@@ -18,7 +18,7 @@ class ProductController extends Controller
         $products = Product::orderBy('created_at', 'desc')->paginate(12);
 
         foreach ($products as $key => $value) {
-            $value->image_url = Storage::disk('s3')->url('products/images/' . $value->image);
+            $value->image_url = Storage::disk('local')->url('/public/products/images/' . $value->image);
             $value->getVariants;
             $value->default_stocks = $value->getVariants()->first()->stock;
             $value->default_price = $value->getVariants()->first()->price;
@@ -68,10 +68,9 @@ class ProductController extends Controller
             ]);
         }
 
-
-        Storage::disk('s3')->putFileAs('/products/images', $request->file('image'), $request->file('image')->hashName(), 'public');
+        Storage::disk('local')->putFileAs('/public/products/images', $request->file('image'), $request->file('image')->hashName(), 'public');
         $product->getVariants;
-        $product->image_url = Storage::disk('s3')->url('products/images/' . $product->image);
+        $product->image_url = Storage::disk('local')->url('/public/products/images/' . $product->image);
         $product->stock = $product->getVariants()->first()->stock;
         $product->price = $product->getVariants()->first()->price;
         return response()->json($product, 200);
@@ -106,17 +105,17 @@ class ProductController extends Controller
         $variant = ProductVariant::where('product_id', $product->id)->get();
 
         if ($request->file('image')) {
-            Storage::disk('s3')->delete('products/images/' . $product->image);
-            Storage::disk('s3')->putFileAs('/products/images', $request->file('image'), $request->file('image')->hashName(), 'public');
+            Storage::disk('local')->delete('/public/products/images/' . $product->image);
+            Storage::disk('local')->putFileAs('/public/products/images', $request->file('image'), $request->file('image')->hashName(), 'public');
         }
 
         $product->update([
             'name' => $request->input('name') ? $request->input('name') : $product->name,
             'description' => $request->input('description') ? $request->input('description') : $product->description,
-            'image' => $request->file('image') ? $request->file('image')->hashName() : $product->image
+            'image' => $request->file('image') ? $request->file('image')->hashName() : $product->image,
         ]);
 
-        $product->image_url = Storage::disk('s3')->url('products/images/' . $product->image);
+        $product->image_url = Storage::disk('local')->url('/public/products/images/' . $product->image);
         $product->getVariants;
         $product->default_stocks = $product->getVariants()->first()->stock;
         $product->default_price = $product->getVariants()->first()->price;
@@ -134,7 +133,7 @@ class ProductController extends Controller
         $products = Product::whereIn('id', $request->input('id'))->get();
         foreach ($products as $product) {
             $product->getVariants()->delete();
-            Storage::disk('s3')->delete('products/images/' . $product->image);
+            Storage::disk('local')->delete('/public/products/images/' . $product->image);
             $product->delete();
         }
 

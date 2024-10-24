@@ -3,14 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
-use Illuminate\Http\Request;
+use App\Models\PostAttachment;
 use Auth;
-use Validator;
+use Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Storage;
-use App\Models\PostAttachment;
 use Str;
-use Carbon;
+use Validator;
 
 class PostController extends Controller
 {
@@ -34,21 +34,20 @@ class PostController extends Controller
                 $post->authLikes = 0;
             }
 
-
             if ($post->getPostAttachmentImages) {
                 foreach ($post->getPostAttachmentImages as $image) {
-                    $image->image_url = Storage::disk('s3')->url('posts/files/' . $image->file_link);
+                    $image->image_url = Storage::disk('local')->url('posts/files/' . $image->file_link);
                 }
             }
 
             if ($post->getPostAttachmentFiles) {
                 foreach ($post->getPostAttachmentFiles as $file) {
-                    $file->file_url = Storage::disk('s3')->url('posts/files/' . $file->file_link);
+                    $file->file_url = Storage::disk('local')->url('posts/files/' . $file->file_link);
                 }
             }
 
             if ($post->getUserDetails) {
-                $post->getUserDetails->image_url = Storage::disk('s3')->url('users/' . $post->user_id . '/images/' . $post->getUserDetails->profile_img);
+                $post->getUserDetails->image_url = Storage::disk('local')->url('users/' . $post->user_id . '/images/' . $post->getUserDetails->profile_img);
             }
         }
 
@@ -76,7 +75,7 @@ class PostController extends Controller
 
         if ($request->file('files')) {
             foreach ($request->file('files') as $file) {
-                Storage::disk('s3')->putFileAs('/posts/files', $file, $file->hashName(), 'public');
+                Storage::disk('local')->putFileAs('/public/posts/files', $file, $file->hashName(), 'public');
 
                 $image_or_video = ['jpg', 'png', 'gif', 'bmp'];
 
@@ -110,13 +109,13 @@ class PostController extends Controller
         $post->comment_counts = 0;
         if ($post->getPostAttachmentImages) {
             foreach ($post->getPostAttachmentImages as $image) {
-                $image->image_url = Storage::disk('s3')->url('posts/files/' . $image->file_link);
+                $image->image_url = Storage::disk('local')->url('/public/posts/files/' . $image->file_link);
             }
         }
 
         if ($post->getPostAttachmentImages) {
             foreach ($post->getPostAttachmentFiles as $file) {
-                $file->file_url = Storage::disk('s3')->url('posts/files/' . $file->file_link);
+                $file->file_url = Storage::disk('local')->url('/public/posts/files/' . $file->file_link);
             }
         }
 
@@ -135,10 +134,10 @@ class PostController extends Controller
             $value->getPostAttachmentImages;
             $value->getPostAttachmentFiles;
             $value->getLikes;
-            $value->getUserDetails->image_url = Storage::disk('s3')->url('users/' . $value->getUserDetails['id'] . '/images/' . $value->getUserDetails['profile_img']);
+            $value->getUserDetails->image_url = Storage::disk('local')->url('users/' . $value->getUserDetails['id'] . '/images/' . $value->getUserDetails['profile_img']);
 
             foreach ($value->getPostAttachmentImages as $image) {
-                $image->image_url = Storage::disk('s3')->url('posts/files/' . $image->file_link);
+                $image->image_url = Storage::disk('local')->url('posts/files/' . $image->file_link);
             }
 
             if ($value->getLikes) {
@@ -168,7 +167,7 @@ class PostController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'id' => 'exists:posts,id',
-            'message' => 'required|string|max:500'
+            'message' => 'required|string|max:500',
         ]);
 
         if ($validator->fails()) {
@@ -196,7 +195,7 @@ class PostController extends Controller
         })->firstOrFail();
 
         foreach ($post->getPostAttachments as $attachment) {
-            Storage::disk('s3')->delete('posts/files/' . $attachment->file_link);
+            Storage::disk('local')->delete('posts/files/' . $attachment->file_link);
         }
 
         $post->getComments()->delete();

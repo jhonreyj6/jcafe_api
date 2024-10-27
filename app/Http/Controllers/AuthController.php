@@ -3,12 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\SubscriptionPlan;
-use Illuminate\Http\Request;
 use App\Models\User;
 use Auth;
-use Validator;
 use Hash;
+use Illuminate\Http\Request;
 use Storage;
+use Validator;
 
 class AuthController extends Controller
 {
@@ -22,12 +22,20 @@ class AuthController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function login()
+    public function login(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'email' => 'email|exists:users,email',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->messages()->get('*'), 422);
+        }
+
         $credentials = request(['email', 'password']);
 
         if (!$token = auth()->attempt($credentials)) {
-            return response()->json(['error' => 'Unauthorized'], 401);
+            return response()->json(['password' => 'Wrong Password!'], 422);
         }
 
         return $this->respondWithToken($token);
@@ -101,7 +109,7 @@ class AuthController extends Controller
             'last_name' => 'min:2|max:20|string|required',
             'email' => 'email:rfc,dns|required|unique:users,email|max:32',
             'password' => 'min:6|max:20|required',
-            'confirm' => 'same:password|required'
+            'confirm' => 'same:password|required',
         ]);
 
         if ($validator->fails()) {
